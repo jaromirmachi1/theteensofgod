@@ -14,8 +14,10 @@ const Player = styled(motion.aside)`
   width: min(21rem, calc(100vw - 2rem));
   padding: 0.8rem 0.9rem;
   border: 1px solid rgba(247, 245, 238, 0.14);
-  border-radius: 1.3rem;
-  background: rgba(4, 6, 16, 0.68);
+  border-radius: 1.7rem;
+  background:
+    radial-gradient(circle at 18% 18%, rgba(198, 255, 128, 0.18), transparent 8rem),
+    rgba(4, 6, 16, 0.72);
   box-shadow: 0 1.4rem 4rem rgba(0, 0, 0, 0.34);
   backdrop-filter: blur(24px);
   color: #f7f5ee;
@@ -28,8 +30,8 @@ const Toggle = styled.button`
   height: 3rem;
   border: 1px solid rgba(185, 183, 255, 0.46);
   border-radius: 999px;
-  background: rgba(94, 98, 245, 0.78);
-  color: inherit;
+  background: #c6ff80;
+  color: #070916;
   cursor: pointer;
   font-size: 0.82rem;
   font-weight: 900;
@@ -78,7 +80,7 @@ const Bar = styled(motion.span)`
   display: block;
   min-height: 0.18rem;
   border-radius: 999px;
-  background: linear-gradient(180deg, #b9b7ff, #5e62f5);
+  background: linear-gradient(180deg, #c6ff80, #5e62f5);
   opacity: 0.78;
 `
 
@@ -91,6 +93,8 @@ type AudioWindow = Window &
   typeof globalThis & {
     webkitAudioContext?: typeof AudioContext
   }
+
+const playerBars = Array.from({ length: 24 }, (_, index) => `ambient-bar-${index}`)
 
 function AmbientPlayer() {
   const [isPlaying, setIsPlaying] = useState(false)
@@ -188,10 +192,9 @@ function AmbientPlayer() {
           <State>{isPlaying ? 'Playing' : 'Tap to play'}</State>
         </Meta>
         <Bars aria-hidden="true">
-          {Array.from({ length: 24 }).map((_, index) => (
+          {playerBars.map((bar, index) => (
             <Bar
-              // eslint-disable-next-line react/no-array-index-key
-              key={index}
+              key={bar}
               animate={{ scaleY: isPlaying ? [0.24, 1, 0.38] : 0.22 }}
               transition={{
                 duration: 1.8 + (index % 5) * 0.24,

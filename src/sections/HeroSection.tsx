@@ -5,10 +5,14 @@ import styled from 'styled-components'
 const Hero = styled.section`
   position: relative;
   isolation: isolate;
-  min-height: 100svh;
+  min-height: calc(100svh - clamp(1rem, 2vw, 2rem));
+  margin: clamp(0.5rem, 1.5vw, 1rem);
+  border: 1px solid rgba(247, 245, 238, 0.14);
+  border-radius: clamp(2rem, 6vw, 5rem);
   overflow: hidden;
   background: #02030a;
   color: #f7f5ee;
+  box-shadow: 0 2rem 7rem rgba(0, 0, 0, 0.45);
 `
 
 const GradientLayer = styled.div`
@@ -24,8 +28,10 @@ const Atmosphere = styled.div`
   z-index: 1;
   pointer-events: none;
   background:
-    radial-gradient(circle at 50% 42%, rgba(7, 11, 35, 0.02), rgba(2, 3, 10, 0.5) 43%, rgba(2, 3, 10, 0.96) 100%),
-    linear-gradient(180deg, rgba(2, 3, 10, 0.18), rgba(2, 3, 10, 0.86) 78%, #02030a);
+    radial-gradient(circle at 16% 16%, rgba(198, 255, 128, 0.18), transparent 20rem),
+    radial-gradient(circle at 86% 20%, rgba(244, 181, 255, 0.18), transparent 22rem),
+    radial-gradient(circle at 50% 42%, rgba(7, 11, 35, 0.02), rgba(2, 3, 10, 0.44) 43%, rgba(2, 3, 10, 0.94) 100%),
+    linear-gradient(180deg, rgba(2, 3, 10, 0.12), rgba(2, 3, 10, 0.82) 78%, #02030a);
 `
 
 const GridTexture = styled.div`
@@ -48,11 +54,15 @@ const Header = styled(motion.header)`
   align-items: center;
   justify-content: space-between;
   gap: 1.25rem;
-  padding: clamp(1rem, 3vw, 1.75rem) clamp(1rem, 5vw, 4rem);
+  padding: clamp(1rem, 3vw, 1.75rem) clamp(1.15rem, 5vw, 4.5rem);
 `
 
 const Brand = styled.a`
   color: inherit;
+  padding: 0.8rem 1rem;
+  border: 1px solid rgba(247, 245, 238, 0.12);
+  border-radius: 999px;
+  background: rgba(247, 245, 238, 0.06);
   font-size: 0.88rem;
   font-weight: 900;
   letter-spacing: 0.12em;
@@ -64,6 +74,11 @@ const Nav = styled.nav`
   display: flex;
   align-items: center;
   gap: clamp(0.75rem, 2vw, 1.4rem);
+  padding: 0.8rem 1rem;
+  border: 1px solid rgba(247, 245, 238, 0.12);
+  border-radius: 999px;
+  background: rgba(247, 245, 238, 0.06);
+  backdrop-filter: blur(18px);
   font-size: 0.78rem;
   font-weight: 800;
   letter-spacing: 0.08em;
@@ -88,11 +103,11 @@ const HeroGrid = styled.div`
   position: relative;
   z-index: 2;
   display: grid;
-  grid-template-columns: minmax(0, 1.05fr) minmax(17rem, 0.7fr);
-  gap: clamp(2rem, 7vw, 6rem);
+  grid-template-columns: minmax(0, 1fr) minmax(17rem, 0.72fr);
+  gap: clamp(1rem, 4vw, 3rem);
   align-items: center;
   min-height: calc(100svh - 5.5rem);
-  padding: clamp(2rem, 5vw, 4rem) clamp(1rem, 5vw, 4rem) clamp(4rem, 8vw, 7rem);
+  padding: clamp(2rem, 5vw, 4rem) clamp(1.15rem, 5vw, 4.5rem) clamp(4rem, 8vw, 6rem);
 
   @media (max-width: 860px) {
     grid-template-columns: 1fr;
@@ -111,10 +126,10 @@ const Label = styled.p`
   width: fit-content;
   margin: 0;
   padding: 0.5rem 0.75rem;
-  border: 1px solid rgba(247, 245, 238, 0.14);
+  border: 1px solid rgba(198, 255, 128, 0.28);
   border-radius: 999px;
-  background: rgba(7, 10, 24, 0.58);
-  color: rgba(247, 245, 238, 0.72);
+  background: rgba(198, 255, 128, 0.1);
+  color: #dcffad;
   backdrop-filter: blur(18px);
   font-size: 0.78rem;
   font-weight: 800;
@@ -123,9 +138,9 @@ const Label = styled.p`
 `
 
 const Title = styled.h1`
-  max-width: 12ch;
+  max-width: 10ch;
   margin: 0;
-  font-size: clamp(4rem, 13vw, 11rem);
+  font-size: clamp(4rem, 12vw, 10.4rem);
   line-height: 0.82;
   letter-spacing: -0.09em;
   text-wrap: balance;
@@ -162,12 +177,11 @@ const Button = styled.a<{ $variant?: 'dark' | 'light' }>`
   justify-content: center;
   min-height: 3.15rem;
   padding: 0.9rem 1.2rem;
-  border: 1px solid
-    ${({ $variant }) => ($variant === 'dark' ? 'rgba(185, 183, 255, 0.62)' : 'rgba(247, 245, 238, 0.18)')};
+  border: 1px solid ${({ $variant }) => ($variant === 'dark' ? 'rgba(198, 255, 128, 0.42)' : 'rgba(247, 245, 238, 0.18)')};
   border-radius: 999px;
   background: ${({ $variant }) =>
-    $variant === 'dark' ? 'rgba(94, 98, 245, 0.78)' : 'rgba(247, 245, 238, 0.08)'};
-  color: #f7f5ee;
+    $variant === 'dark' ? 'linear-gradient(135deg, #c6ff80, #9df5d1)' : 'rgba(247, 245, 238, 0.08)'};
+  color: ${({ $variant }) => ($variant === 'dark' ? '#07110b' : '#f7f5ee')};
   font-size: 0.84rem;
   font-weight: 900;
   letter-spacing: 0.07em;
@@ -182,8 +196,8 @@ const Button = styled.a<{ $variant?: 'dark' | 'light' }>`
   &:hover {
     transform: translateY(-2px);
     background: ${({ $variant }) =>
-      $variant === 'dark' ? 'rgba(94, 98, 245, 0.95)' : 'rgba(247, 245, 238, 0.14)'};
-    box-shadow: 0 1rem 2rem rgba(17, 20, 142, 0.26);
+      $variant === 'dark' ? 'linear-gradient(135deg, #dcffad, #b7ffe3)' : 'rgba(247, 245, 238, 0.14)'};
+    box-shadow: 0 1rem 2rem rgba(198, 255, 128, 0.18);
   }
 `
 
@@ -191,10 +205,11 @@ const Visual = styled(motion.aside)`
   position: relative;
   min-height: min(68vh, 42rem);
   border: 1px solid rgba(247, 245, 238, 0.13);
-  border-radius: clamp(1.5rem, 4vw, 3.5rem);
+  border-radius: clamp(2rem, 5vw, 4rem);
   background:
-    radial-gradient(circle at 50% 16%, rgba(174, 102, 215, 0.58), transparent 18rem),
-    radial-gradient(circle at 20% 78%, rgba(17, 20, 142, 0.92), transparent 16rem),
+    radial-gradient(circle at 36% 20%, rgba(198, 255, 128, 0.28), transparent 15rem),
+    radial-gradient(circle at 78% 18%, rgba(244, 181, 255, 0.32), transparent 18rem),
+    radial-gradient(circle at 20% 78%, rgba(94, 98, 245, 0.72), transparent 16rem),
     linear-gradient(145deg, rgba(8, 9, 22, 0.86), rgba(2, 3, 10, 0.78));
   box-shadow: 0 2.5rem 6rem rgba(0, 0, 0, 0.34);
   overflow: hidden;
@@ -203,7 +218,7 @@ const Visual = styled(motion.aside)`
   &::before {
     content: '';
     position: absolute;
-    inset: 1rem;
+    inset: 1.25rem;
     border: 1px solid rgba(247, 245, 238, 0.16);
     border-radius: inherit;
   }
@@ -213,7 +228,7 @@ const Visual = styled(motion.aside)`
     position: absolute;
     inset: 22% 18%;
     border-radius: 999px;
-    background: rgba(185, 183, 255, 0.2);
+    background: rgba(198, 255, 128, 0.18);
     filter: blur(4rem);
   }
 
@@ -229,7 +244,7 @@ const VisualText = styled.div`
   display: grid;
   gap: 0.5rem;
   padding: clamp(1.1rem, 3vw, 1.5rem);
-  border-radius: 1.6rem;
+  border-radius: 2rem;
   border: 1px solid rgba(247, 245, 238, 0.14);
   background: rgba(2, 3, 10, 0.54);
   color: #f7f5ee;
@@ -238,7 +253,7 @@ const VisualText = styled.div`
 
 const VisualKicker = styled.p`
   margin: 0;
-  color: #b9b7ff;
+  color: #c6ff80;
   font-size: 0.76rem;
   font-weight: 900;
   letter-spacing: 0.16em;

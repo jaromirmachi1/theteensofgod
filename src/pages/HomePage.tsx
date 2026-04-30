@@ -4,27 +4,40 @@ import HeroSection from '../sections/HeroSection'
 
 const Main = styled.main`
   min-height: 100vh;
-  background: #02030a;
+  padding-bottom: clamp(0.5rem, 1.5vw, 1rem);
+  background:
+    radial-gradient(circle at 12% 4%, rgba(198, 255, 128, 0.14), transparent 22rem),
+    radial-gradient(circle at 88% 12%, rgba(244, 181, 255, 0.13), transparent 24rem),
+    #05070d;
   color: #f7f5ee;
 `
 
 const Sections = styled.div`
   position: relative;
   z-index: 1;
+  display: grid;
+  gap: clamp(0.85rem, 2vw, 1.2rem);
 `
 
 const Section = styled(motion.section)<{ $tone?: 'cream' | 'navy' | 'blue' }>`
   display: grid;
   gap: clamp(2rem, 5vw, 4rem);
-  padding: clamp(4rem, 9vw, 7rem) clamp(1rem, 5vw, 4rem);
+  margin-inline: clamp(0.5rem, 1.5vw, 1rem);
+  padding: clamp(3rem, 8vw, 6rem) clamp(1.2rem, 5vw, 4rem);
   scroll-margin-top: 2rem;
+  border: 1px solid
+    ${({ $tone }) => ($tone === 'cream' ? 'rgba(5, 7, 13, 0.08)' : 'rgba(247, 245, 238, 0.12)')};
+  border-radius: clamp(2rem, 6vw, 5rem);
   background: ${({ $tone }) =>
     $tone === 'navy'
-      ? '#050712'
+      ? 'radial-gradient(circle at 12% 16%, rgba(198, 255, 128, 0.16), transparent 22rem), #070916'
       : $tone === 'blue'
-        ? 'linear-gradient(135deg, #11148e, #5e62f5 52%, #ae66d7)'
-        : 'radial-gradient(circle at 82% 4%, rgba(94, 98, 245, 0.2), transparent 26rem), #02030a'};
-  color: #f7f5ee;
+        ? 'linear-gradient(135deg, #11148e, #5e62f5 50%, #f4b5ff)'
+        : $tone === 'cream'
+          ? 'linear-gradient(135deg, #f6f0df, #dfffb0)'
+          : 'radial-gradient(circle at 82% 4%, rgba(94, 98, 245, 0.22), transparent 26rem), #090b14'};
+  color: ${({ $tone }) => ($tone === 'cream' ? '#070916' : '#f7f5ee')};
+  box-shadow: 0 1rem 4rem rgba(0, 0, 0, 0.2);
 `
 
 const SectionIntro = styled.div`
@@ -47,7 +60,7 @@ const Split = styled.div`
 const Grid = styled.div`
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1rem;
+  gap: clamp(0.8rem, 2vw, 1.2rem);
 
   @media (max-width: 900px) {
     grid-template-columns: 1fr;
@@ -56,7 +69,7 @@ const Grid = styled.div`
 
 const Eyebrow = styled.p`
   margin: 0;
-  color: #b9b7ff;
+  color: #c6ff80;
   font-size: 0.78rem;
   font-weight: 800;
   letter-spacing: 0.18em;
@@ -94,14 +107,34 @@ const Card = styled(motion.article)<{ $accent?: 'green' | 'purple' | 'blue' }>`
   display: grid;
   align-content: start;
   gap: 1rem;
-  min-height: 18rem;
-  padding: clamp(1.25rem, 3vw, 2rem);
-  border: 1px solid rgba(247, 245, 238, 0.12);
-  border-radius: 2rem;
+  min-height: 19rem;
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+  border: 1px solid rgba(247, 245, 238, 0.14);
+  border-radius: clamp(2rem, 4vw, 3rem);
   background:
-    linear-gradient(180deg, rgba(247, 245, 238, 0.1), rgba(247, 245, 238, 0.025)),
+    radial-gradient(
+      circle at 22% 18%,
+      ${({ $accent }) =>
+        $accent === 'green'
+          ? 'rgba(198, 255, 128, 0.18)'
+          : $accent === 'purple'
+            ? 'rgba(244, 181, 255, 0.2)'
+            : 'rgba(94, 98, 245, 0.22)'},
+      transparent 13rem
+    ),
+    linear-gradient(180deg, rgba(247, 245, 238, 0.11), rgba(247, 245, 238, 0.03)),
     rgba(8, 10, 24, 0.72);
   box-shadow: inset 0 1px 0 rgba(247, 245, 238, 0.08);
+  transition:
+    border-color 0.35s ease,
+    box-shadow 0.35s ease;
+
+  &:hover {
+    border-color: rgba(247, 245, 238, 0.28);
+    box-shadow:
+      inset 0 1px 0 rgba(247, 245, 238, 0.1),
+      0 1.5rem 4rem rgba(0, 0, 0, 0.24);
+  }
 
   &::before {
     content: '';
@@ -109,7 +142,7 @@ const Card = styled(motion.article)<{ $accent?: 'green' | 'purple' | 'blue' }>`
     height: 0.45rem;
     border-radius: 999px;
     background: ${({ $accent }) =>
-      $accent === 'green' ? '#92d6c1' : $accent === 'purple' ? '#ae66d7' : '#5e62f5'};
+      $accent === 'green' ? '#c6ff80' : $accent === 'purple' ? '#f4b5ff' : '#5e62f5'};
   }
 `
 
@@ -134,10 +167,10 @@ const LinkButton = styled.a<{ $light?: boolean }>`
   align-items: center;
   min-height: 3rem;
   padding: 0.85rem 1.1rem;
-  border: 1px solid ${({ $light }) => ($light ? 'rgba(247, 245, 238, 0.22)' : 'rgba(185, 183, 255, 0.54)')};
+  border: 1px solid ${({ $light }) => ($light ? 'rgba(198, 255, 128, 0.34)' : 'rgba(198, 255, 128, 0.54)')};
   border-radius: 999px;
-  background: ${({ $light }) => ($light ? 'rgba(247, 245, 238, 0.08)' : 'rgba(94, 98, 245, 0.72)')};
-  color: #f7f5ee;
+  background: ${({ $light }) => ($light ? 'rgba(198, 255, 128, 0.1)' : '#c6ff80')};
+  color: ${({ $light }) => ($light ? '#f7f5ee' : '#070916')};
   font-size: 0.8rem;
   font-weight: 900;
   letter-spacing: 0.08em;
@@ -152,9 +185,10 @@ const StatPanel = styled(motion.aside)`
   gap: 1rem;
   padding: clamp(1.4rem, 4vw, 2.4rem);
   border: 1px solid rgba(247, 245, 238, 0.12);
-  border-radius: 2.2rem;
+  border-radius: clamp(2rem, 5vw, 4rem);
   background:
-    radial-gradient(circle at 15% 10%, rgba(174, 102, 215, 0.26), transparent 18rem),
+    radial-gradient(circle at 15% 10%, rgba(198, 255, 128, 0.18), transparent 18rem),
+    radial-gradient(circle at 80% 82%, rgba(244, 181, 255, 0.18), transparent 16rem),
     rgba(2, 3, 10, 0.82);
   color: #f7f5ee;
   box-shadow: 0 2rem 5rem rgba(0, 0, 0, 0.24);
@@ -166,7 +200,7 @@ const StatPanel = styled(motion.aside)`
 
 const StatNumber = styled.p`
   margin: 0;
-  color: #92d6c1;
+  color: #c6ff80;
   font-size: clamp(4.8rem, 14vw, 10rem);
   font-weight: 900;
   line-height: 0.78;
@@ -199,9 +233,10 @@ const Quote = styled(motion.blockquote)`
   min-height: 20rem;
   margin: 0;
   padding: clamp(1.4rem, 4vw, 2.4rem);
-  border-left: 0.45rem solid #b9b7ff;
-  border-radius: 0 2rem 2rem 0;
-  background: rgba(2, 3, 10, 0.2);
+  border: 1px solid rgba(247, 245, 238, 0.16);
+  border-left: 0.55rem solid #c6ff80;
+  border-radius: clamp(2rem, 4vw, 3rem);
+  background: rgba(2, 3, 10, 0.24);
 `
 
 const QuoteText = styled.p`
@@ -235,10 +270,10 @@ const SocialGrid = styled.div`
 const SocialLink = styled(motion.a)`
   display: grid;
   gap: 1rem;
-  min-height: 16rem;
-  padding: 1.4rem;
+  min-height: 17rem;
+  padding: clamp(1.4rem, 3vw, 2rem);
   border: 1px solid rgba(247, 245, 238, 0.12);
-  border-radius: 2rem;
+  border-radius: clamp(2rem, 4vw, 3rem);
   color: #f7f5ee;
   text-decoration: none;
   background: rgba(8, 10, 24, 0.58);
@@ -248,7 +283,7 @@ const SocialLink = styled(motion.a)`
 
   &:hover {
     transform: translateY(-4px);
-    background: rgba(94, 98, 245, 0.16);
+    background: rgba(198, 255, 128, 0.12);
   }
 `
 
@@ -264,7 +299,7 @@ const Form = styled(motion.form)`
   gap: 0.85rem;
   padding: clamp(1.25rem, 3vw, 2rem);
   border: 1px solid rgba(247, 245, 238, 0.16);
-  border-radius: 2rem;
+  border-radius: clamp(2rem, 4vw, 3rem);
   background: rgba(247, 245, 238, 0.06);
 `
 
@@ -281,7 +316,7 @@ const Field = styled.label`
 const Input = styled.input`
   min-height: 3.2rem;
   border: 1px solid rgba(247, 245, 238, 0.18);
-  border-radius: 1rem;
+  border-radius: 1.2rem;
   background: rgba(247, 245, 238, 0.08);
   color: #f7f5ee;
   font: inherit;
@@ -291,7 +326,7 @@ const Input = styled.input`
 const TextArea = styled.textarea`
   min-height: 8rem;
   border: 1px solid rgba(247, 245, 238, 0.18);
-  border-radius: 1rem;
+  border-radius: 1.2rem;
   background: rgba(247, 245, 238, 0.08);
   color: #f7f5ee;
   font: inherit;
@@ -303,8 +338,8 @@ const Submit = styled.button`
   min-height: 3.25rem;
   border: 0;
   border-radius: 999px;
-  background: #92d6c1;
-  color: #02030a;
+  background: #c6ff80;
+  color: #070916;
   cursor: pointer;
   font-size: 0.82rem;
   font-weight: 900;
@@ -323,9 +358,9 @@ const PillList = styled.ul`
 
 const Pill = styled.li`
   padding: 0.55rem 0.8rem;
-  border: 1px solid rgba(247, 245, 238, 0.14);
+  border: 1px solid currentColor;
   border-radius: 999px;
-  color: rgba(247, 245, 238, 0.72);
+  color: currentColor;
   font-size: 0.8rem;
   font-weight: 800;
 `
@@ -396,6 +431,7 @@ function HomePage() {
       <Sections>
         <Section
           id="o-projektu"
+          $tone="cream"
           aria-labelledby="project-title"
           variants={sectionReveal}
           initial="hidden"
@@ -424,6 +460,7 @@ function HomePage() {
         </Section>
 
         <Section
+          $tone="cream"
           aria-labelledby="paths-title"
           variants={sectionReveal}
           initial="hidden"
