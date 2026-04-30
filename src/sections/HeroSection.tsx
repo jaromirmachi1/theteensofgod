@@ -52,7 +52,7 @@ const Header = styled(motion.header)`
   z-index: 3;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 1.25rem;
   padding: clamp(1rem, 3vw, 1.75rem) clamp(1.15rem, 5vw, 4.5rem);
 `
@@ -68,35 +68,6 @@ const Brand = styled.a`
   letter-spacing: 0.12em;
   text-decoration: none;
   text-transform: uppercase;
-`
-
-const Nav = styled.nav`
-  display: flex;
-  align-items: center;
-  gap: clamp(0.75rem, 2vw, 1.4rem);
-  padding: 0.8rem 1rem;
-  border: 1px solid rgba(247, 245, 238, 0.12);
-  border-radius: 999px;
-  background: rgba(247, 245, 238, 0.06);
-  backdrop-filter: blur(18px);
-  font-size: 0.78rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-
-  @media (max-width: 760px) {
-    display: none;
-  }
-`
-
-const NavLink = styled.a`
-  color: rgba(247, 245, 238, 0.66);
-  text-decoration: none;
-  transition: color 0.2s ease;
-
-  &:hover {
-    color: #b9b7ff;
-  }
 `
 
 const HeroGrid = styled.div`
@@ -287,7 +258,7 @@ const ScrollCue = styled.a`
 
 function HeroSection() {
   return (
-    <Hero aria-label="Úvod The Teens of God">
+    <Hero id="uvod" aria-label="Úvod The Teens of God">
       <GradientLayer aria-hidden="true">
         <ShaderGradientCanvas style={{ position: 'absolute', inset: 0 }} pixelDensity={1} fov={45}>
           <ShaderGradient
@@ -330,12 +301,6 @@ function HeroSection() {
 
       <Header initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}>
         <Brand href="#">The Teens of God</Brand>
-        <Nav aria-label="Hlavní navigace">
-          <NavLink href="#o-projektu">O projektu</NavLink>
-          <NavLink href="#prednasky">Přednášky</NavLink>
-          <NavLink href="#recenze">Recenze</NavLink>
-          <NavLink href="#kontakt">Kontakt</NavLink>
-        </Nav>
       </Header>
 
       <HeroGrid>

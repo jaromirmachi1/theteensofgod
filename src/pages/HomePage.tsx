@@ -461,6 +461,7 @@ function HomePage() {
 
         <Section
           $tone="cream"
+          id="temata"
           aria-labelledby="paths-title"
           variants={sectionReveal}
           initial="hidden"

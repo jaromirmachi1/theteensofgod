@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
+import reikiHealingTrack from '../assets/music/432 Hz Reiki Healing Music 15 minutes for Chi Balance and Meditation.mp3'
 
 const Player = styled(motion.aside)`
   position: fixed;
@@ -84,86 +85,34 @@ const Bar = styled(motion.span)`
   opacity: 0.78;
 `
 
-type AmbientNode = {
-  oscillator: OscillatorNode
-  gain: GainNode
-}
-
-type AudioWindow = Window &
-  typeof globalThis & {
-    webkitAudioContext?: typeof AudioContext
-  }
-
 const playerBars = Array.from({ length: 24 }, (_, index) => `ambient-bar-${index}`)
 
 function AmbientPlayer() {
   const [isPlaying, setIsPlaying] = useState(false)
-  const audioContextRef = useRef<AudioContext | null>(null)
-  const masterGainRef = useRef<GainNode | null>(null)
-  const nodesRef = useRef<AmbientNode[]>([])
+  const audioRef = useRef<HTMLAudioElement | null>(null)
 
   useEffect(() => {
+    const audio = audioRef.current
+
     return () => {
-      nodesRef.current.forEach(({ oscillator }) => oscillator.stop())
-      audioContextRef.current?.close()
+      audio?.pause()
     }
   }, [])
 
   const startAmbient = async () => {
-    const AudioContextClass = window.AudioContext || (window as AudioWindow).webkitAudioContext
+    const audio = audioRef.current
 
-    if (!AudioContextClass) {
+    if (!audio) {
       return
     }
 
-    const context = audioContextRef.current ?? new AudioContextClass()
-    audioContextRef.current = context
-
-    if (context.state === 'suspended') {
-      await context.resume()
-    }
-
-    if (!masterGainRef.current) {
-      const masterGain = context.createGain()
-      masterGain.gain.setValueAtTime(0, context.currentTime)
-      masterGain.gain.linearRampToValueAtTime(0.065, context.currentTime + 1.6)
-      masterGain.connect(context.destination)
-      masterGainRef.current = masterGain
-
-      const frequencies = [146.83, 220, 293.66, 369.99]
-      nodesRef.current = frequencies.map((frequency, index) => {
-        const oscillator = context.createOscillator()
-        const gain = context.createGain()
-
-        oscillator.type = index % 2 === 0 ? 'sine' : 'triangle'
-        oscillator.frequency.setValueAtTime(frequency, context.currentTime)
-        oscillator.detune.setValueAtTime(index * 3 - 4, context.currentTime)
-        gain.gain.setValueAtTime(0.12 / frequencies.length, context.currentTime)
-
-        oscillator.connect(gain)
-        gain.connect(masterGain)
-        oscillator.start()
-
-        return { oscillator, gain }
-      })
-    } else {
-      masterGainRef.current.gain.cancelScheduledValues(context.currentTime)
-      masterGainRef.current.gain.linearRampToValueAtTime(0.065, context.currentTime + 0.9)
-    }
-
-    setIsPlaying(true)
+    audio.volume = 0.42
+    await audio.play()
+    setIsPlaying(!audio.paused)
   }
 
   const pauseAmbient = () => {
-    const context = audioContextRef.current
-    const masterGain = masterGainRef.current
-
-    if (!context || !masterGain) {
-      return
-    }
-
-    masterGain.gain.cancelScheduledValues(context.currentTime)
-    masterGain.gain.linearRampToValueAtTime(0, context.currentTime + 0.8)
+    audioRef.current?.pause()
     setIsPlaying(false)
   }
 
@@ -183,12 +132,13 @@ function AmbientPlayer() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.9, delay: 1.1, ease: [0.22, 1, 0.36, 1] }}
     >
+      <audio ref={audioRef} src={reikiHealingTrack} preload="metadata" loop />
       <Toggle type="button" aria-label={isPlaying ? 'Pozastavit ambient' : 'Pustit ambient'} onClick={toggleAmbient}>
         {isPlaying ? 'II' : '▶'}
       </Toggle>
       <Track>
         <Meta>
-          <Name>Calm Signal</Name>
+          <Name>432 Hz Reiki</Name>
           <State>{isPlaying ? 'Playing' : 'Tap to play'}</State>
         </Meta>
         <Bars aria-hidden="true">
