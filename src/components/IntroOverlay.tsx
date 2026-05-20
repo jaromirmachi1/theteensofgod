@@ -8,6 +8,8 @@ const Overlay = styled(motion.div)`
   z-index: 50;
   display: grid;
   place-items: center;
+  min-height: 100svh;
+  height: 100svh;
   padding: 1rem;
   background: #05070d;
   color: #f7f5ee;
@@ -21,7 +23,7 @@ const IntroCard = styled(motion.div)`
   border: 1px solid rgba(247, 245, 238, 0.14);
   border-radius: clamp(2rem, 6vw, 4rem);
   background:
-    radial-gradient(circle at 18% 18%, rgba(198, 255, 128, 0.22), transparent 17rem),
+    radial-gradient(circle at 18% 18%, rgba(151, 203, 143, 0.22), transparent 17rem),
     radial-gradient(circle at 82% 68%, rgba(94, 98, 245, 0.34), transparent 18rem),
     rgba(247, 245, 238, 0.04);
   box-shadow: 0 2rem 6rem rgba(0, 0, 0, 0.42);
@@ -29,7 +31,7 @@ const IntroCard = styled(motion.div)`
 
 const IntroLabel = styled.p`
   margin: 0;
-  color: #c6ff80;
+  color: #97cb8f;
   font-size: 0.78rem;
   font-weight: 900;
   letter-spacing: 0.2em;
@@ -55,7 +57,7 @@ const IntroProgress = styled(motion.span)`
   display: block;
   height: 100%;
   border-radius: inherit;
-  background: linear-gradient(90deg, #c6ff80, #5e62f5, #f4b5ff);
+  background: linear-gradient(90deg, #97cb8f, #5e62f5, #f4b5ff);
 `
 
 function IntroOverlay() {

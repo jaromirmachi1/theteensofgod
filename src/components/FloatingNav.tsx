@@ -6,6 +6,7 @@ const navItems = [
   { label: 'Úvod', href: '#uvod', id: 'uvod' },
   { label: 'Projekt', href: '#o-projektu', id: 'o-projektu' },
   { label: 'Témata', href: '#temata', id: 'temata' },
+  { label: 'Ukázka', href: '#ukazka', id: 'ukazka' },
   { label: 'Přednášky', href: '#prednasky', id: 'prednasky' },
   { label: 'Kontakt', href: '#kontakt', id: 'kontakt' },
 ] as const
@@ -21,7 +22,7 @@ const Nav = styled(motion.nav)`
   border: 1px solid rgba(247, 245, 238, 0.16);
   border-radius: 999px;
   background:
-    radial-gradient(circle at 16% 20%, rgba(198, 255, 128, 0.18), transparent 11rem),
+    radial-gradient(circle at 16% 20%, rgba(151, 203, 143, 0.18), transparent 11rem),
     rgba(5, 7, 13, 0.76);
   box-shadow: 0 1.2rem 4rem rgba(0, 0, 0, 0.38);
   backdrop-filter: blur(24px);
@@ -57,7 +58,7 @@ const NavLink = styled.a<{ $active?: boolean }>`
     inset: 0;
     z-index: -1;
     border-radius: inherit;
-    background: ${({ $active }) => ($active ? 'linear-gradient(135deg, #c6ff80, #9df5d1)' : 'transparent')};
+    background: ${({ $active }) => ($active ? 'linear-gradient(135deg, #97cb8f, #9df5d1)' : 'transparent')};
     opacity: ${({ $active }) => ($active ? 1 : 0)};
     transition: opacity 0.24s ease;
   }

@@ -5,14 +5,25 @@ import styled from 'styled-components'
 const Hero = styled.section`
   position: relative;
   isolation: isolate;
-  min-height: calc(100svh - clamp(1rem, 2vw, 2rem));
-  margin: clamp(0.5rem, 1.5vw, 1rem);
+  display: flex;
+  flex-direction: column;
+  min-height: 100svh;
+  height: 100svh;
+  max-height: 100svh;
   border: 1px solid rgba(247, 245, 238, 0.14);
   border-radius: clamp(2rem, 6vw, 5rem);
   overflow: hidden;
   background: #02030a;
   color: #f7f5ee;
   box-shadow: 0 2rem 7rem rgba(0, 0, 0, 0.45);
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+
+  @media (max-width: 860px) {
+    height: 100svh;
+    max-height: 100svh;
+    min-height: 100svh;
+  }
 `
 
 const GradientLayer = styled.div`
@@ -28,7 +39,7 @@ const Atmosphere = styled.div`
   z-index: 1;
   pointer-events: none;
   background:
-    radial-gradient(circle at 16% 16%, rgba(198, 255, 128, 0.18), transparent 20rem),
+    radial-gradient(circle at 16% 16%, rgba(151, 203, 143, 0.18), transparent 20rem),
     radial-gradient(circle at 86% 20%, rgba(244, 181, 255, 0.18), transparent 22rem),
     radial-gradient(circle at 50% 42%, rgba(7, 11, 35, 0.02), rgba(2, 3, 10, 0.44) 43%, rgba(2, 3, 10, 0.94) 100%),
     linear-gradient(180deg, rgba(2, 3, 10, 0.12), rgba(2, 3, 10, 0.82) 78%, #02030a);
@@ -47,49 +58,30 @@ const GridTexture = styled.div`
   mask-image: linear-gradient(to bottom, black, transparent 82%);
 `
 
-const Header = styled(motion.header)`
-  position: relative;
-  z-index: 3;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 1.25rem;
-  padding: clamp(1rem, 3vw, 1.75rem) clamp(1.15rem, 5vw, 4.5rem);
-`
-
-const Brand = styled.a`
-  color: inherit;
-  padding: 0.8rem 1rem;
-  border: 1px solid rgba(247, 245, 238, 0.12);
-  border-radius: 999px;
-  background: rgba(247, 245, 238, 0.06);
-  font-size: 0.88rem;
-  font-weight: 900;
-  letter-spacing: 0.12em;
-  text-decoration: none;
-  text-transform: uppercase;
-`
-
 const HeroGrid = styled.div`
   position: relative;
   z-index: 2;
+  flex: 1;
+  min-height: 0;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(17rem, 0.72fr);
-  gap: clamp(1rem, 4vw, 3rem);
+  grid-template-columns: minmax(0, 1fr) minmax(14rem, 0.68fr);
+  gap: clamp(0.85rem, 3vw, 2rem);
   align-items: center;
-  min-height: calc(100svh - 5.5rem);
-  padding: clamp(2rem, 5vw, 4rem) clamp(1.15rem, 5vw, 4.5rem) clamp(4rem, 8vw, 6rem);
+  padding: clamp(1.5rem, 4vw, 2.5rem) clamp(1.15rem, 5vw, 4.5rem) clamp(5.5rem, 9vw, 7rem);
 
   @media (max-width: 860px) {
     grid-template-columns: 1fr;
-    min-height: auto;
-    padding-top: 3rem;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    align-content: start;
+    padding-top: clamp(0.75rem, 3vw, 1.25rem);
   }
 `
 
 const HeroCopy = styled(motion.div)`
   display: grid;
-  gap: clamp(1rem, 3vw, 1.7rem);
+  gap: clamp(0.75rem, 2vw, 1.25rem);
   max-width: 62rem;
 `
 
@@ -97,10 +89,10 @@ const Label = styled.p`
   width: fit-content;
   margin: 0;
   padding: 0.5rem 0.75rem;
-  border: 1px solid rgba(198, 255, 128, 0.28);
+  border: 1px solid rgba(151, 203, 143, 0.28);
   border-radius: 999px;
-  background: rgba(198, 255, 128, 0.1);
-  color: #dcffad;
+  background: rgba(151, 203, 143, 0.1);
+  color: #bee3b9;
   backdrop-filter: blur(18px);
   font-size: 0.78rem;
   font-weight: 800;
@@ -111,7 +103,7 @@ const Label = styled.p`
 const Title = styled.h1`
   max-width: 10ch;
   margin: 0;
-  font-size: clamp(4rem, 12vw, 10.4rem);
+  font-size: clamp(2.6rem, 11vw, 7.8rem);
   line-height: 0.82;
   letter-spacing: -0.09em;
   text-wrap: balance;
@@ -121,7 +113,7 @@ const Title = styled.h1`
 const Mission = styled.p`
   max-width: 58rem;
   margin: 0;
-  font-size: clamp(1.25rem, 3vw, 2.2rem);
+  font-size: clamp(1.1rem, 2.4vw, 1.75rem);
   font-weight: 700;
   line-height: 1.12;
   letter-spacing: -0.04em;
@@ -131,8 +123,8 @@ const Description = styled.p`
   max-width: 48rem;
   margin: 0;
   color: rgba(247, 245, 238, 0.72);
-  font-size: clamp(1rem, 2vw, 1.2rem);
-  line-height: 1.7;
+  font-size: clamp(0.95rem, 1.6vw, 1.08rem);
+  line-height: 1.6;
 `
 
 const Actions = styled.div`
@@ -148,10 +140,10 @@ const Button = styled.a<{ $variant?: 'dark' | 'light' }>`
   justify-content: center;
   min-height: 3.15rem;
   padding: 0.9rem 1.2rem;
-  border: 1px solid ${({ $variant }) => ($variant === 'dark' ? 'rgba(198, 255, 128, 0.42)' : 'rgba(247, 245, 238, 0.18)')};
+  border: 1px solid ${({ $variant }) => ($variant === 'dark' ? 'rgba(151, 203, 143, 0.42)' : 'rgba(247, 245, 238, 0.18)')};
   border-radius: 999px;
   background: ${({ $variant }) =>
-    $variant === 'dark' ? 'linear-gradient(135deg, #c6ff80, #9df5d1)' : 'rgba(247, 245, 238, 0.08)'};
+    $variant === 'dark' ? 'linear-gradient(135deg, #97cb8f, #9df5d1)' : 'rgba(247, 245, 238, 0.08)'};
   color: ${({ $variant }) => ($variant === 'dark' ? '#07110b' : '#f7f5ee')};
   font-size: 0.84rem;
   font-weight: 900;
@@ -167,18 +159,20 @@ const Button = styled.a<{ $variant?: 'dark' | 'light' }>`
   &:hover {
     transform: translateY(-2px);
     background: ${({ $variant }) =>
-      $variant === 'dark' ? 'linear-gradient(135deg, #dcffad, #b7ffe3)' : 'rgba(247, 245, 238, 0.14)'};
-    box-shadow: 0 1rem 2rem rgba(198, 255, 128, 0.18);
+      $variant === 'dark' ? 'linear-gradient(135deg, #bee3b9, #b7ffe3)' : 'rgba(247, 245, 238, 0.14)'};
+    box-shadow: 0 1rem 2rem rgba(151, 203, 143, 0.18);
   }
 `
 
 const Visual = styled(motion.aside)`
   position: relative;
-  min-height: min(68vh, 42rem);
+  height: 100%;
+  max-height: min(72svh, 38rem);
+  min-height: 14rem;
   border: 1px solid rgba(247, 245, 238, 0.13);
   border-radius: clamp(2rem, 5vw, 4rem);
   background:
-    radial-gradient(circle at 36% 20%, rgba(198, 255, 128, 0.28), transparent 15rem),
+    radial-gradient(circle at 36% 20%, rgba(151, 203, 143, 0.28), transparent 15rem),
     radial-gradient(circle at 78% 18%, rgba(244, 181, 255, 0.32), transparent 18rem),
     radial-gradient(circle at 20% 78%, rgba(94, 98, 245, 0.72), transparent 16rem),
     linear-gradient(145deg, rgba(8, 9, 22, 0.86), rgba(2, 3, 10, 0.78));
@@ -199,12 +193,14 @@ const Visual = styled(motion.aside)`
     position: absolute;
     inset: 22% 18%;
     border-radius: 999px;
-    background: rgba(198, 255, 128, 0.18);
+    background: rgba(151, 203, 143, 0.18);
     filter: blur(4rem);
   }
 
   @media (max-width: 860px) {
-    min-height: 23rem;
+    height: min(28svh, 16rem);
+    max-height: min(28svh, 16rem);
+    min-height: 12rem;
   }
 `
 
@@ -224,7 +220,7 @@ const VisualText = styled.div`
 
 const VisualKicker = styled.p`
   margin: 0;
-  color: #c6ff80;
+  color: #97cb8f;
   font-size: 0.76rem;
   font-weight: 900;
   letter-spacing: 0.16em;
@@ -242,7 +238,7 @@ const VisualQuote = styled.p`
 const ScrollCue = styled.a`
   position: absolute;
   right: clamp(1rem, 5vw, 4rem);
-  bottom: 1.5rem;
+  bottom: clamp(4.5rem, 8vw, 5.5rem);
   z-index: 2;
   color: rgba(247, 245, 238, 0.52);
   font-size: 0.74rem;
@@ -299,10 +295,6 @@ function HeroSection() {
       <Atmosphere aria-hidden="true" />
       <GridTexture aria-hidden="true" />
 
-      <Header initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}>
-        <Brand href="#">The Teens of God</Brand>
-      </Header>
-
       <HeroGrid>
         <HeroCopy
           initial={{ opacity: 0, y: 34 }}
@@ -312,12 +304,12 @@ function HeroSection() {
           <Label>Gen Z hlas pro školy a teenagery</Label>
           <Title>The Teens of God</Title>
           <Mission>
-            Připravit děti na nový digitální svět a pomoct jim zůstat lidma.
+            Pomáháme mladým zvládnout digitální svět a neztratit v něm sami sebe.
           </Mission>
           <Description>
             Kristýna Sekaninová mluví s teenagery o AI, screentimu, vztazích,
-            řeči těla a emoční inteligenci jazykem, který nezní jako plakát ze
-            sborovny.
+            řeči těla a emocích jazykem, kterému opravdu rozumí. Bez moralizování
+            a bez školních frází.
           </Description>
           <Actions>
             <Button $variant="dark" href="#najdi-me">
@@ -337,8 +329,8 @@ function HeroSection() {
           <VisualText>
             <VisualKicker>Shelter</VisualKicker>
             <VisualQuote>
-              „Jsi jedna z nich. Která trochu více viděla — a vrací se říct,
-              co viděla.“
+              „Někdo, kdo ten svět zná zevnitř a vrací se, aby ho pomohl lépe
+              pochopit.“
             </VisualQuote>
           </VisualText>
         </Visual>

@@ -8,20 +8,6 @@ const Player = styled(motion.aside)`
   right: clamp(1rem, 3vw, 2rem);
   bottom: clamp(1rem, 3vw, 2rem);
   z-index: 20;
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 0.85rem;
-  align-items: center;
-  width: min(21rem, calc(100vw - 2rem));
-  padding: 0.8rem 0.9rem;
-  border: 1px solid rgba(247, 245, 238, 0.14);
-  border-radius: 1.7rem;
-  background:
-    radial-gradient(circle at 18% 18%, rgba(198, 255, 128, 0.18), transparent 8rem),
-    rgba(4, 6, 16, 0.72);
-  box-shadow: 0 1.4rem 4rem rgba(0, 0, 0, 0.34);
-  backdrop-filter: blur(24px);
-  color: #f7f5ee;
 `
 
 const Toggle = styled.button`
@@ -31,61 +17,25 @@ const Toggle = styled.button`
   height: 3rem;
   border: 1px solid rgba(185, 183, 255, 0.46);
   border-radius: 999px;
-  background: #c6ff80;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(151, 203, 143, 0.35), transparent 70%),
+    #97cb8f;
   color: #070916;
   cursor: pointer;
   font-size: 0.82rem;
   font-weight: 900;
   letter-spacing: 0.04em;
-`
+  box-shadow: 0 1rem 2.5rem rgba(0, 0, 0, 0.32);
+  backdrop-filter: blur(20px);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 
-const Track = styled.div`
-  display: grid;
-  gap: 0.35rem;
-  min-width: 0;
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 1.2rem 3rem rgba(151, 203, 143, 0.22);
+  }
 `
-
-const Meta = styled.div`
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 0.75rem;
-`
-
-const Name = styled.p`
-  margin: 0;
-  font-size: 0.84rem;
-  font-weight: 900;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-`
-
-const State = styled.p`
-  margin: 0;
-  color: rgba(247, 245, 238, 0.56);
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-`
-
-const Bars = styled.div`
-  display: grid;
-  grid-template-columns: repeat(24, 1fr);
-  gap: 0.18rem;
-  height: 1.6rem;
-  align-items: end;
-`
-
-const Bar = styled(motion.span)`
-  display: block;
-  min-height: 0.18rem;
-  border-radius: 999px;
-  background: linear-gradient(180deg, #c6ff80, #5e62f5);
-  opacity: 0.78;
-`
-
-const playerBars = Array.from({ length: 24 }, (_, index) => `ambient-bar-${index}`)
 
 function AmbientPlayer() {
   const [isPlaying, setIsPlaying] = useState(false)
@@ -93,9 +43,40 @@ function AmbientPlayer() {
 
   useEffect(() => {
     const audio = audioRef.current
+    if (!audio) {
+      return
+    }
+
+    let cancelled = false
+
+    const playAmbient = async () => {
+      try {
+        audio.volume = 0.42
+        await audio.play()
+        if (!cancelled) {
+          setIsPlaying(!audio.paused)
+        }
+      } catch {
+        // Browsers may block autoplay until the first user gesture.
+      }
+    }
+
+    void playAmbient()
+
+    const playOnGesture = () => {
+      if (!audio.paused) {
+        return
+      }
+
+      void playAmbient()
+    }
+
+    window.addEventListener('pointerdown', playOnGesture, { once: true })
 
     return () => {
-      audio?.pause()
+      cancelled = true
+      window.removeEventListener('pointerdown', playOnGesture)
+      audio.pause()
     }
   }, [])
 
@@ -106,9 +87,13 @@ function AmbientPlayer() {
       return
     }
 
-    audio.volume = 0.42
-    await audio.play()
-    setIsPlaying(!audio.paused)
+    try {
+      audio.volume = 0.42
+      await audio.play()
+      setIsPlaying(!audio.paused)
+    } catch {
+      setIsPlaying(false)
+    }
   }
 
   const pauseAmbient = () => {
@@ -132,30 +117,10 @@ function AmbientPlayer() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.9, delay: 1.1, ease: [0.22, 1, 0.36, 1] }}
     >
-      <audio ref={audioRef} src={reikiHealingTrack} preload="metadata" loop />
+      <audio ref={audioRef} src={reikiHealingTrack} preload="auto" loop />
       <Toggle type="button" aria-label={isPlaying ? 'Pozastavit ambient' : 'Pustit ambient'} onClick={toggleAmbient}>
         {isPlaying ? 'II' : '▶'}
       </Toggle>
-      <Track>
-        <Meta>
-          <Name>432 Hz Reiki</Name>
-          <State>{isPlaying ? 'Playing' : 'Tap to play'}</State>
-        </Meta>
-        <Bars aria-hidden="true">
-          {playerBars.map((bar, index) => (
-            <Bar
-              key={bar}
-              animate={{ scaleY: isPlaying ? [0.24, 1, 0.38] : 0.22 }}
-              transition={{
-                duration: 1.8 + (index % 5) * 0.24,
-                repeat: isPlaying ? Infinity : 0,
-                repeatType: 'mirror',
-                ease: 'easeInOut',
-              }}
-            />
-          ))}
-        </Bars>
-      </Track>
     </Player>
   )
 }
