@@ -4,10 +4,9 @@ import styled from 'styled-components'
 
 const navItems = [
   { label: 'Úvod', href: '#uvod', id: 'uvod' },
-  { label: 'Projekt', href: '#o-projektu', id: 'o-projektu' },
   { label: 'Témata', href: '#temata', id: 'temata' },
-  { label: 'Ukázka', href: '#ukazka', id: 'ukazka' },
-  { label: 'Přednášky', href: '#prednasky', id: 'prednasky' },
+  { label: 'Recenze', href: '#recenze', id: 'recenze' },
+  { label: 'Ceník', href: '#cenik', id: 'cenik' },
   { label: 'Kontakt', href: '#kontakt', id: 'kontakt' },
 ] as const
 

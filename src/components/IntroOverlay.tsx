@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
 import styled from 'styled-components'
+import { headingH1, typeEyebrow } from '../styles/typography'
 
 const Overlay = styled(motion.div)`
   position: fixed;
@@ -30,20 +31,13 @@ const IntroCard = styled(motion.div)`
 `
 
 const IntroLabel = styled.p`
-  margin: 0;
+  ${typeEyebrow};
   color: #97cb8f;
-  font-size: 0.78rem;
-  font-weight: 900;
   letter-spacing: 0.2em;
-  text-transform: uppercase;
 `
 
 const IntroTitle = styled.p`
-  margin: 0;
-  font-size: clamp(3rem, 11vw, 7rem);
-  font-weight: 900;
-  line-height: 0.86;
-  letter-spacing: -0.09em;
+  ${headingH1};
 `
 
 const IntroBar = styled.div`

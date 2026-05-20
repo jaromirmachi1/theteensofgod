@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import styled from 'styled-components'
+import { headingH2, typeBody, typeEyebrow } from '../styles/typography'
 import {
   featuredLecture,
   getFeaturedLectureThumbnail,
@@ -53,28 +54,18 @@ const Copy = styled(motion.div)`
 `
 
 const Eyebrow = styled.p`
-  margin: 0;
+  ${typeEyebrow};
   color: #97cb8f;
-  font-size: 0.78rem;
-  font-weight: 800;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
 `
 
 const Title = styled.h2`
+  ${headingH2};
   max-width: 12ch;
-  margin: 0;
-  font-size: clamp(2.2rem, 5.5vw, 4.6rem);
-  line-height: 0.88;
-  letter-spacing: -0.075em;
-  text-wrap: balance;
 `
 
 const Text = styled.p`
-  margin: 0;
+  ${typeBody};
   max-width: 42ch;
-  font-size: clamp(1rem, 1.8vw, 1.12rem);
-  line-height: 1.65;
   color: rgba(247, 245, 238, 0.72);
 `
 

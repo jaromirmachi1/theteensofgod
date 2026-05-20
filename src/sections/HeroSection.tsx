@@ -1,6 +1,7 @@
 import { ShaderGradient, ShaderGradientCanvas } from '@shadergradient/react'
 import { motion } from 'framer-motion'
 import styled from 'styled-components'
+import { headingH1, typeBody, typeEyebrow, typeLead } from '../styles/typography'
 
 const Hero = styled.section`
   position: relative;
@@ -86,45 +87,33 @@ const HeroCopy = styled(motion.div)`
 `
 
 const Label = styled.p`
+  ${typeEyebrow};
   width: fit-content;
-  margin: 0;
   padding: 0.5rem 0.75rem;
   border: 1px solid rgba(151, 203, 143, 0.28);
   border-radius: 999px;
   background: rgba(151, 203, 143, 0.1);
   color: #bee3b9;
   backdrop-filter: blur(18px);
-  font-size: 0.78rem;
-  font-weight: 800;
   letter-spacing: 0.12em;
-  text-transform: uppercase;
 `
 
 const Title = styled.h1`
+  ${headingH1};
   max-width: 10ch;
-  margin: 0;
-  font-size: clamp(2.6rem, 11vw, 7.8rem);
-  line-height: 0.82;
-  letter-spacing: -0.09em;
-  text-wrap: balance;
   text-shadow: 0 1.2rem 5rem rgba(0, 0, 0, 0.42);
 `
 
 const Mission = styled.p`
+  ${typeLead};
   max-width: 58rem;
-  margin: 0;
-  font-size: clamp(1.1rem, 2.4vw, 1.75rem);
   font-weight: 700;
-  line-height: 1.12;
-  letter-spacing: -0.04em;
 `
 
 const Description = styled.p`
+  ${typeBody};
   max-width: 48rem;
-  margin: 0;
   color: rgba(247, 245, 238, 0.72);
-  font-size: clamp(0.95rem, 1.6vw, 1.08rem);
-  line-height: 1.6;
 `
 
 const Actions = styled.div`
@@ -312,7 +301,7 @@ function HeroSection() {
             a bez školních frází.
           </Description>
           <Actions>
-            <Button $variant="dark" href="#najdi-me">
+            <Button $variant="dark" href="#kontakt">
               Jsem teenager
             </Button>
             <Button href="#prednasky">Jsem škola / organizace</Button>

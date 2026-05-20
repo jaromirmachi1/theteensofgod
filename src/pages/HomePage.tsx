@@ -1,7 +1,19 @@
 import { motion, type Variants } from 'framer-motion'
 import styled from 'styled-components'
+import {
+  headingH2,
+  headingH3,
+  typeBody,
+  typeEyebrow,
+  typeLead,
+  typeQuote,
+  typeSocial,
+  typeStat,
+} from '../styles/typography'
+import { referenceRows } from '../data/references'
 import HeroSection from '../sections/HeroSection'
 import LectureVideoSection from '../sections/LectureVideoSection'
+import PricingSection from '../sections/PricingSection'
 
 const Main = styled.main`
   min-height: 100vh;
@@ -27,10 +39,11 @@ const Section = styled(motion.section)<{
   $tone?: 'cream' | 'navy' | 'blue'
   $vh?: ViewportHeight
   $fit?: boolean
+  $start?: boolean
 }>`
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: ${({ $start }) => ($start ? 'flex-start' : 'center')};
   gap: clamp(1.25rem, 3vw, 2rem);
   min-height: ${({ $vh = 100 }) => sectionHeight($vh)};
   ${({ $vh, $fit }) => {
@@ -60,54 +73,6 @@ const Section = styled(motion.section)<{
   padding-bottom: ${({ $vh, $fit }) =>
     $vh === 50 && !$fit ? 'clamp(3.25rem, 5vw, 4rem)' : 'clamp(5rem, 10vw, 6.5rem)'};
 
-  ${({ $vh }) =>
-    $vh === 50 &&
-    `
-    ${Split} {
-      gap: clamp(1rem, 3vw, 2rem);
-      align-items: center;
-    }
-
-    ${SectionTitle} {
-      font-size: clamp(1.75rem, 4.2vw, 3rem);
-    }
-
-    ${Lead} {
-      font-size: clamp(0.95rem, 1.7vw, 1.15rem);
-    }
-
-    ${SectionText} {
-      font-size: clamp(0.86rem, 1.3vw, 0.98rem);
-      line-height: 1.5;
-    }
-
-    ${Grid} {
-      gap: 0.65rem;
-      align-items: stretch;
-    }
-
-    ${PathsGrid} {
-      gap: 0.55rem;
-    }
-
-    ${Card} {
-      padding: clamp(0.75rem, 1.6vw, 0.95rem);
-      gap: 0.4rem;
-    }
-
-    ${PathsGrid} ${Card} {
-      height: 100%;
-    }
-
-    ${CardTitle} {
-      font-size: clamp(1rem, 1.8vw, 1.2rem);
-    }
-
-    ${SmallText} {
-      font-size: 0.84rem;
-      line-height: 1.45;
-    }
-  `}
   scroll-margin-top: 0;
   scroll-snap-align: start;
   scroll-snap-stop: always;
@@ -210,48 +175,31 @@ const PathsGrid = styled(Grid)`
 `
 
 const PathsTitle = styled.h3`
+  ${headingH3};
   max-width: 16ch;
-  margin: 0;
-  font-size: clamp(1.6rem, 3.8vw, 2.6rem);
-  line-height: 0.9;
-  letter-spacing: -0.06em;
-  text-wrap: balance;
 `
 
 const Eyebrow = styled.p<{ $onCream?: boolean }>`
-  margin: 0;
+  ${typeEyebrow};
   color: ${({ $onCream }) => ($onCream ? '#11148e' : '#97cb8f')};
-  font-size: 0.78rem;
-  font-weight: 800;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
 `
 
 const SectionTitle = styled.h2`
+  ${headingH2};
   max-width: 13ch;
-  margin: 0;
-  font-size: clamp(2.4rem, 6.5vw, 5.5rem);
-  line-height: 0.86;
-  letter-spacing: -0.075em;
-  text-wrap: balance;
 `
 
 const SectionText = styled.p`
+  ${typeBody};
   max-width: 64ch;
-  margin: 0;
-  font-size: clamp(1rem, 2vw, 1.18rem);
-  line-height: 1.75;
+  line-height: 1.7;
   color: currentColor;
   opacity: 0.7;
 `
 
 const Lead = styled.p`
+  ${typeLead};
   max-width: 52rem;
-  margin: 0;
-  font-size: clamp(1.15rem, 2.4vw, 1.85rem);
-  font-weight: 800;
-  line-height: 1.08;
-  letter-spacing: -0.045em;
 `
 
 const Card = styled(motion.article)<{ $accent?: 'green' | 'purple' | 'blue' }>`
@@ -298,17 +246,12 @@ const Card = styled(motion.article)<{ $accent?: 'green' | 'purple' | 'blue' }>`
 `
 
 const CardTitle = styled.h3`
-  margin: 0;
-  font-size: clamp(1.35rem, 3vw, 2rem);
-  line-height: 1;
-  letter-spacing: -0.045em;
+  ${headingH3};
 `
 
 const SmallText = styled.p`
-  margin: 0;
+  ${typeBody};
   color: currentColor;
-  font-size: 0.98rem;
-  line-height: 1.65;
   opacity: 0.75;
 `
 
@@ -350,26 +293,25 @@ const StatPanel = styled(motion.aside)`
 `
 
 const StatNumber = styled.p`
-  margin: 0;
+  ${typeStat};
   color: #97cb8f;
-  font-size: clamp(3.5rem, 10vw, 7rem);
-  font-weight: 900;
-  line-height: 0.78;
-  letter-spacing: -0.1em;
 `
 
 const StatLabel = styled.p`
-  margin: 0;
+  ${typeLead};
   max-width: 24rem;
-  font-size: clamp(1.1rem, 2.4vw, 1.6rem);
-  font-weight: 800;
-  line-height: 1.12;
   letter-spacing: -0.035em;
 `
 
-const QuoteGrid = styled.div`
+const QuoteGrid = styled(motion.div)`
   display: grid;
-  grid-template-columns: 1.2fr 0.8fr;
+  gap: 1rem;
+  width: 100%;
+`
+
+const QuoteRow = styled.div<{ $flip?: boolean }>`
+  display: grid;
+  grid-template-columns: ${({ $flip }) => ($flip ? '0.8fr 1.2fr' : '1.2fr 0.8fr')};
   gap: 1rem;
 
   @media (max-width: 860px) {
@@ -377,7 +319,7 @@ const QuoteGrid = styled.div`
   }
 `
 
-const Quote = styled(motion.blockquote)`
+const Quote = styled.blockquote`
   display: grid;
   align-content: space-between;
   gap: 1.5rem;
@@ -387,16 +329,14 @@ const Quote = styled(motion.blockquote)`
   border: 1px solid rgba(247, 245, 238, 0.16);
   border-left: 0.55rem solid #97cb8f;
   border-radius: clamp(2rem, 4vw, 3rem);
-  background: rgba(2, 3, 10, 0.24);
+  background:
+    radial-gradient(circle at 12% 8%, rgba(151, 203, 143, 0.12), transparent 14rem),
+    rgba(2, 3, 10, 0.42);
+  box-shadow: 0 1.25rem 3rem rgba(0, 0, 0, 0.22);
 `
 
 const QuoteText = styled.p`
-  margin: 0;
-  font-size: clamp(1.45rem, 3.5vw, 3rem);
-  font-style: italic;
-  font-weight: 800;
-  line-height: 1.02;
-  letter-spacing: -0.055em;
+  ${typeQuote};
 `
 
 const QuoteMeta = styled.footer`
@@ -412,6 +352,7 @@ const SocialGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1rem;
+  width: 100%;
 
   @media (max-width: 760px) {
     grid-template-columns: 1fr;
@@ -439,10 +380,20 @@ const SocialLink = styled(motion.a)`
 `
 
 const SocialName = styled.span`
-  font-size: clamp(2rem, 5vw, 4rem);
-  font-weight: 900;
-  line-height: 0.9;
-  letter-spacing: -0.07em;
+  ${typeSocial};
+`
+
+const SocialBlock = styled.div`
+  display: grid;
+  gap: clamp(0.85rem, 2vw, 1.25rem);
+  width: 100%;
+`
+
+const SocialIntro = styled.p`
+  ${typeBody};
+  margin: 0;
+  max-width: 42ch;
+  color: rgba(247, 245, 238, 0.72);
 `
 
 const Form = styled(motion.form)`
@@ -562,7 +513,21 @@ const sectionReveal: Variants = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.9, ease: calmEase },
+    transition: {
+      duration: 0.9,
+      ease: calmEase,
+      staggerChildren: 0.12,
+      delayChildren: 0.06,
+    },
+  },
+}
+
+const quoteReveal: Variants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.7, ease: calmEase },
   },
 }
 
@@ -661,7 +626,7 @@ function HomePage() {
               <SectionIntro>
                 <Eyebrow>Přednášky</Eyebrow>
                 <SectionTitle id="lectures-title">Pro školy, které chtějí víc než program do rozvrhu</SectionTitle>
-                <LinkButton $light href="#kontakt">
+                <LinkButton $light href="#cenik">
                   Chci Kristýnu na přednášku
                 </LinkButton>
               </SectionIntro>
@@ -696,33 +661,36 @@ function HomePage() {
           id="recenze"
           $tone="blue"
           $vh={100}
+          $start
           aria-labelledby="reviews-title"
           variants={sectionReveal}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, amount: 0.25 }}
+          viewport={{ once: true, amount: 0.18 }}
         >
           <SectionIntro>
             <Eyebrow>Reference</Eyebrow>
             <SectionTitle id="reviews-title">Důkaz musí znít od dětí i dospělých</SectionTitle>
+            <Lead>
+              Nejde o marketingové citace. Jde o to, co říkají teenageři po přednášce
+              a co školy vidí ve třídě hned potom.
+            </Lead>
           </SectionIntro>
-          <QuoteGrid>
-            <Quote variants={calmCard}>
-              <QuoteText>
-                „Nejlepší reference nejsou hezké fráze. Jsou to reakce mladých,
-                kteří po přednášce zůstávají, ptají se a chtějí pokračovat.“
-              </QuoteText>
-              <QuoteMeta>Teenager pohled</QuoteMeta>
-            </Quote>
-            <Quote variants={calmCard}>
-              <QuoteText>
-                „Autenticita není ve škole riziko. Je to důvod, proč děti
-                poslouchají a opravdu se zapojují.“
-              </QuoteText>
-              <QuoteMeta>Školní pohled</QuoteMeta>
-            </Quote>
+          <QuoteGrid variants={quoteReveal}>
+            {referenceRows.map((row, rowIndex) => (
+              <QuoteRow key={rowIndex} $flip={rowIndex % 2 === 1}>
+                {row.map((item) => (
+                  <Quote key={item.meta}>
+                    <QuoteText>{item.text}</QuoteText>
+                    <QuoteMeta>{item.meta}</QuoteMeta>
+                  </Quote>
+                ))}
+              </QuoteRow>
+            ))}
           </QuoteGrid>
         </Section>
+
+        <PricingSection />
 
         <Section
           id="o-nas"
@@ -759,42 +727,6 @@ function HomePage() {
         </Section>
 
         <Section
-          id="najdi-me"
-          $vh={100}
-          aria-labelledby="social-title"
-          variants={sectionReveal}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.25 }}
-        >
-          <SectionIntro>
-            <Eyebrow>Obsah</Eyebrow>
-            <SectionTitle id="social-title">Najdi mě tam, kde už jsi</SectionTitle>
-            <SectionText>
-              Místo složité knihovny obsahu stavíme na kanálech, kde mladí
-              opravdu tráví čas. Krátké formáty, jasná sdělení a konzistentní
-              hlas.
-            </SectionText>
-          </SectionIntro>
-          <SocialGrid>
-            {socials.map((social) => (
-              <SocialLink
-                key={social.name}
-                href={social.href}
-                target="_blank"
-                rel="noreferrer"
-                variants={calmCard}
-                whileHover={{ y: -8 }}
-              >
-                <SocialName>{social.name}</SocialName>
-                <SmallText>{social.text}</SmallText>
-                <SmallText>@theTeensOfGod</SmallText>
-              </SocialLink>
-            ))}
-          </SocialGrid>
-        </Section>
-
-        <Section
           id="kontakt"
           $tone="navy"
           $fit
@@ -815,29 +747,49 @@ function HomePage() {
                 </SectionText>
               </SectionIntro>
               <Form name="lecture-inquiry" method="post" variants={calmCard}>
-              <Field>
-                Jméno
-                <Input name="name" autoComplete="name" required />
-              </Field>
-              <Field>
-                Škola / Organizace
-                <Input name="organization" autoComplete="organization" required />
-              </Field>
-              <Field>
-                E-mail
-                <Input name="email" type="email" autoComplete="email" required />
-              </Field>
-              <Field>
-                Telefon
-                <Input name="phone" type="tel" autoComplete="tel" />
-              </Field>
-              <Field>
-                Zpráva
-                <TextArea name="message" required />
-              </Field>
-              <Submit type="submit">Chci Kristýnu na přednášku</Submit>
-            </Form>
+                <Field>
+                  Jméno
+                  <Input name="name" autoComplete="name" required />
+                </Field>
+                <Field>
+                  Škola / Organizace
+                  <Input name="organization" autoComplete="organization" required />
+                </Field>
+                <Field>
+                  E-mail
+                  <Input name="email" type="email" autoComplete="email" required />
+                </Field>
+                <Field>
+                  Telefon
+                  <Input name="phone" type="tel" autoComplete="tel" />
+                </Field>
+                <Field>
+                  Zpráva
+                  <TextArea name="message" required />
+                </Field>
+                <Submit type="submit">Chci Kristýnu na přednášku</Submit>
+              </Form>
             </Split>
+            <SocialBlock aria-label="Sociální sítě">
+              <SocialIntro>
+                Najdi mě tam, kde už jsi — TikTok, Instagram a YouTube, bez složité knihovny obsahu.
+              </SocialIntro>
+              <SocialGrid>
+                {socials.map((social) => (
+                  <SocialLink
+                    key={social.name}
+                    href={social.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    whileHover={{ y: -8 }}
+                  >
+                    <SocialName>{social.name}</SocialName>
+                    <SmallText>{social.text}</SmallText>
+                    <SmallText>@theTeensOfGod</SmallText>
+                  </SocialLink>
+                ))}
+              </SocialGrid>
+            </SocialBlock>
           </SectionScroll>
         </Section>
       </Sections>
