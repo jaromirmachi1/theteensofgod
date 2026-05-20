@@ -1,5 +1,6 @@
 import Lenis from 'lenis'
 import { useEffect } from 'react'
+import { APP_SCROLL_EVENT } from '../lib/scrollEvents'
 
 function SmoothScroll() {
   useEffect(() => {
@@ -12,8 +13,13 @@ function SmoothScroll() {
 
     let frameId = 0
 
+    const notifyScroll = () => {
+      window.dispatchEvent(new Event(APP_SCROLL_EVENT))
+    }
+
     function raf(time: number) {
       lenis.raf(time)
+      notifyScroll()
       frameId = requestAnimationFrame(raf)
     }
 

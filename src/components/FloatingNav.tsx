@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
 import styled from 'styled-components'
+import { APP_SCROLL_EVENT } from '../lib/scrollEvents'
 
 const navItems = [
   { label: 'Úvod', href: '#uvod', id: 'uvod' },
@@ -9,6 +10,14 @@ const navItems = [
   { label: 'Ceník', href: '#cenik', id: 'cenik' },
   { label: 'Kontakt', href: '#kontakt', id: 'kontakt' },
 ] as const
+
+type NavSectionId = (typeof navItems)[number]['id']
+
+/** Horizontal band used to pick the section currently being read. */
+const SCROLL_PROBE_RATIO = 0.33
+
+/** Section top must be at or above this (px) to count as “arrived”, not merely peeking in. */
+const SECTION_ARRIVED_PX = 140
 
 const Nav = styled(motion.nav)`
   position: fixed;
@@ -68,33 +77,54 @@ const NavLink = styled.a<{ $active?: boolean }>`
   }
 `
 
+function getActiveSection(): NavSectionId {
+  const probeY = window.innerHeight * SCROLL_PROBE_RATIO
+  let fallback: NavSectionId = navItems[0].id
+  let match: NavSectionId | null = null
+
+  for (const item of navItems) {
+    const section = document.getElementById(item.id)
+    if (!section) continue
+
+    const { top, bottom } = section.getBoundingClientRect()
+
+    // Last match wins; top must be near viewport top so a tall next block does not steal focus early.
+    if (top <= probeY && bottom >= probeY && top <= SECTION_ARRIVED_PX) {
+      match = item.id
+    }
+
+    if (top <= probeY) {
+      fallback = item.id
+    }
+  }
+
+  return match ?? fallback
+}
+
 function FloatingNav() {
-  const [activeSection, setActiveSection] = useState<(typeof navItems)[number]['id']>('uvod')
+  const [activeSection, setActiveSection] = useState<NavSectionId>('uvod')
 
   useEffect(() => {
-    const sections = navItems
-      .map((item) => document.getElementById(item.id))
-      .filter((section): section is HTMLElement => Boolean(section))
+    let frameId = 0
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visibleEntry = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((entryA, entryB) => entryB.intersectionRatio - entryA.intersectionRatio)[0]
+    const updateActiveSection = () => {
+      cancelAnimationFrame(frameId)
+      frameId = requestAnimationFrame(() => {
+        setActiveSection(getActiveSection())
+      })
+    }
 
-        if (visibleEntry?.target.id) {
-          setActiveSection(visibleEntry.target.id as (typeof navItems)[number]['id'])
-        }
-      },
-      {
-        rootMargin: '-38% 0px -45% 0px',
-        threshold: [0.12, 0.28, 0.5, 0.7],
-      },
-    )
+    updateActiveSection()
+    window.addEventListener(APP_SCROLL_EVENT, updateActiveSection)
+    window.addEventListener('resize', updateActiveSection, { passive: true })
+    window.addEventListener('hashchange', updateActiveSection)
 
-    sections.forEach((section) => observer.observe(section))
-
-    return () => observer.disconnect()
+    return () => {
+      cancelAnimationFrame(frameId)
+      window.removeEventListener(APP_SCROLL_EVENT, updateActiveSection)
+      window.removeEventListener('resize', updateActiveSection)
+      window.removeEventListener('hashchange', updateActiveSection)
+    }
   }, [])
 
   return (
@@ -105,7 +135,12 @@ function FloatingNav() {
       transition={{ duration: 0.75, delay: 1.15, ease: [0.22, 1, 0.36, 1] }}
     >
       {navItems.map((item) => (
-        <NavLink key={item.id} href={item.href} $active={activeSection === item.id} aria-current={activeSection === item.id ? 'page' : undefined}>
+        <NavLink
+          key={item.id}
+          href={item.href}
+          $active={activeSection === item.id}
+          aria-current={activeSection === item.id ? 'page' : undefined}
+        >
           {item.label}
         </NavLink>
       ))}
