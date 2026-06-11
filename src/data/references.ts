@@ -1,4 +1,4 @@
-export const referenceRows = [
+export const referenceSlides = [
   [
     {
       text: '„Nejsilnější reference nejsou dokonalé věty. Jsou to zprávy od dětí, které po přednášce zůstaly, začaly sledovat a chtěly pokračovat.“',

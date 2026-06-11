@@ -15,4 +15,12 @@ export const pricingTiers = [
     footnote: 'Sleva 1 500 Kč pro školu, která objedná dvě přednášky najednou v jeden den.',
     featured: true,
   },
+  {
+    title: 'Workshop',
+    meta: 'Delší blok · hlubší práce s tématem ve skupině nebo třídě',
+    price: '15 000 Kč',
+    priceNote: '+ cestovné',
+    footnote:
+      'Rozsah a délku domluvíme podle školy. Cestovné se počítá stejně jako u přednášek z Vyškova.',
+  },
 ] as const

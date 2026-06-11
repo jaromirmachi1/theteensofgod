@@ -116,43 +116,6 @@ const Description = styled.p`
   color: rgba(247, 245, 238, 0.72);
 `
 
-const Actions = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.8rem;
-  margin-top: 0.35rem;
-`
-
-const Button = styled.a<{ $variant?: 'dark' | 'light' }>`
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 3.15rem;
-  padding: 0.9rem 1.2rem;
-  border: 1px solid ${({ $variant }) => ($variant === 'dark' ? 'rgba(151, 203, 143, 0.42)' : 'rgba(247, 245, 238, 0.18)')};
-  border-radius: 999px;
-  background: ${({ $variant }) =>
-    $variant === 'dark' ? 'linear-gradient(135deg, #97cb8f, #9df5d1)' : 'rgba(247, 245, 238, 0.08)'};
-  color: ${({ $variant }) => ($variant === 'dark' ? '#07110b' : '#f7f5ee')};
-  font-size: 0.84rem;
-  font-weight: 900;
-  letter-spacing: 0.07em;
-  text-decoration: none;
-  text-transform: uppercase;
-  backdrop-filter: blur(20px);
-  transition:
-    transform 0.2s ease,
-    background 0.2s ease,
-    box-shadow 0.2s ease;
-
-  &:hover {
-    transform: translateY(-2px);
-    background: ${({ $variant }) =>
-      $variant === 'dark' ? 'linear-gradient(135deg, #bee3b9, #b7ffe3)' : 'rgba(247, 245, 238, 0.14)'};
-    box-shadow: 0 1rem 2rem rgba(151, 203, 143, 0.18);
-  }
-`
-
 const Visual = styled(motion.aside)`
   position: relative;
   height: 100%;
@@ -300,12 +263,6 @@ function HeroSection() {
             řeči těla a emocích jazykem, kterému opravdu rozumí. Bez moralizování
             a bez školních frází.
           </Description>
-          <Actions>
-            <Button $variant="dark" href="#kontakt">
-              Jsem teenager
-            </Button>
-            <Button href="#prednasky">Jsem škola / organizace</Button>
-          </Actions>
         </HeroCopy>
 
         <Visual

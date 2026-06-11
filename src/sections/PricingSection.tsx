@@ -33,8 +33,8 @@ const Layout = styled.div`
   z-index: 1;
   display: grid;
   grid-template-columns: minmax(0, 0.85fr) minmax(18rem, 1.15fr);
-  gap: clamp(1.5rem, 5vw, 4rem);
-  align-items: center;
+  gap: clamp(1.15rem, 3vw, 2rem) clamp(1.5rem, 5vw, 4rem);
+  align-items: start;
   width: 100%;
   min-height: 0;
 
@@ -65,23 +65,54 @@ const IntroText = styled.p`
   color: rgba(247, 245, 238, 0.68);
 `
 
-const PricingNote = styled.p`
-  ${typeBody};
-  max-width: 44ch;
-  color: rgba(247, 245, 238, 0.52);
-`
-
 const TierList = styled.div`
   display: grid;
-  gap: clamp(0.8rem, 2vw, 1rem);
+  grid-column: 1 / -1;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 2.4vw, 1.5rem);
   min-width: 0;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @media (max-width: 720px) {
+    grid-template-columns: 1fr;
+  }
 `
 
 const TierCard = styled(motion.article)<{ $featured?: boolean }>`
   position: relative;
+  min-height: clamp(21rem, 38svh, 25rem);
+  perspective: 1200px;
+
+  &:focus {
+    outline: 0;
+  }
+
+  &:hover > div,
+  &:focus-within > div,
+  &:focus > div {
+    transform: rotateY(180deg);
+  }
+`
+
+const TierInner = styled.div`
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: inherit;
+  transform-style: preserve-3d;
+  transition: transform 0.72s cubic-bezier(0.22, 1, 0.36, 1);
+`
+
+const TierFace = styled.div<{ $featured?: boolean; $back?: boolean }>`
+  position: absolute;
+  inset: 0;
   display: grid;
-  gap: clamp(0.85rem, 2vw, 1rem);
-  padding: clamp(1.2rem, 3vw, 1.8rem);
+  align-content: space-between;
+  gap: clamp(1.35rem, 2.6vw, 2rem);
+  padding: clamp(1.45rem, 3vw, 2rem);
   border: 1px solid
     ${({ $featured }) => ($featured ? 'rgba(151, 203, 143, 0.3)' : 'rgba(247, 245, 238, 0.12)')};
   border-radius: clamp(1.5rem, 4vw, 2.75rem);
@@ -93,32 +124,39 @@ const TierCard = styled(motion.article)<{ $featured?: boolean }>`
     $featured ? '0 1.5rem 4rem rgba(0, 0, 0, 0.24)' : '0 1rem 3rem rgba(0, 0, 0, 0.18)'};
   overflow: hidden;
   backdrop-filter: blur(24px);
+  backface-visibility: hidden;
+  transform: ${({ $back }) => ($back ? 'rotateY(180deg)' : 'rotateY(0)')};
 
   &::before {
     content: '';
-    width: 2.6rem;
-    height: 0.42rem;
-    border-radius: 999px;
-    background: ${({ $featured }) =>
-      $featured ? 'linear-gradient(90deg, #97cb8f, #f4b5ff)' : 'rgba(247, 245, 238, 0.24)'};
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: ${({ $back }) =>
+      $back
+        ? 'radial-gradient(circle at 50% 18%, rgba(151, 203, 143, 0.18), transparent 13rem)'
+        : 'radial-gradient(circle at 18% 12%, rgba(244, 181, 255, 0.09), transparent 14rem)'};
   }
 `
 
-const TierMain = styled.div`
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: clamp(1rem, 3vw, 2rem);
-  align-items: start;
+const TierStripe = styled.span<{ $featured?: boolean }>`
+  display: block;
+  width: 2.8rem;
+  height: 0.42rem;
+  margin-bottom: clamp(0.25rem, 1vw, 0.6rem);
+  border-radius: 999px;
+  background: ${({ $featured }) =>
+    $featured ? 'linear-gradient(90deg, #97cb8f, #f4b5ff)' : 'rgba(247, 245, 238, 0.24)'};
+`
 
-  @media (max-width: 640px) {
-    grid-template-columns: 1fr;
-    gap: 0.75rem;
-  }
+const TierTop = styled.div`
+  display: grid;
+  gap: clamp(1.05rem, 2.2vw, 1.55rem);
 `
 
 const TierCopy = styled.div`
   display: grid;
-  gap: 0.35rem;
+  gap: clamp(0.7rem, 1.5vw, 1rem);
 `
 
 const TierTitle = styled.h3`
@@ -144,51 +182,74 @@ const TierBadge = styled.span`
 const TierMeta = styled.p`
   ${typeBody};
   color: rgba(247, 245, 238, 0.62);
-  line-height: 1.5;
+  line-height: 1.65;
+`
+
+const RevealHint = styled.p`
+  margin: 0;
+  width: fit-content;
+  margin-top: clamp(0.75rem, 2vw, 1.4rem);
+  padding: 0.48rem 0.72rem;
+  border: 1px solid rgba(247, 245, 238, 0.14);
+  border-radius: 999px;
+  background: rgba(2, 3, 10, 0.28);
+  color: rgba(247, 245, 238, 0.62);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 `
 
 const TierPriceBlock = styled.div`
   display: grid;
-  justify-items: end;
-  gap: 0.25rem;
-  align-self: start;
-  padding: 0.75rem 0.9rem;
-  border: 1px solid rgba(247, 245, 238, 0.1);
-  border-radius: 1.25rem;
-  background: rgba(2, 3, 10, 0.28);
-  text-align: right;
-
-  @media (max-width: 640px) {
-    justify-items: start;
-    text-align: left;
-    width: fit-content;
-  }
+  gap: clamp(0.6rem, 1.4vw, 0.9rem);
+  padding-bottom: clamp(0.7rem, 1.5vw, 1rem);
+  border-bottom: 1px solid rgba(247, 245, 238, 0.1);
 `
 
 const TierPrice = styled.p`
   margin: 0;
-  font-size: clamp(1.1rem, 2vw, 1.3rem);
-  font-weight: 700;
-  line-height: 1.2;
-  letter-spacing: -0.02em;
-  color: rgba(247, 245, 238, 0.8);
+  font-size: clamp(2.2rem, 4.8vw, 3.6rem);
+  font-weight: 900;
+  line-height: 0.9;
+  letter-spacing: -0.065em;
+  color: #f7f5ee;
 `
 
 const TierPriceNote = styled.p`
   margin: 0;
+  color: #97cb8f;
   font-size: 0.82rem;
-  font-weight: 600;
-  color: rgba(247, 245, 238, 0.46);
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 `
 
 const TierFootnote = styled.p`
   ${typeBody};
   margin: 0;
-  padding-top: clamp(0.75rem, 2vw, 1rem);
-  border-top: 1px solid rgba(247, 245, 238, 0.09);
-  color: rgba(247, 245, 238, 0.52);
-  line-height: 1.55;
+  color: rgba(247, 245, 238, 0.66);
+  line-height: 1.7;
   font-size: 0.92rem;
+`
+
+const BackCta = styled.a`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  min-height: 2.75rem;
+  padding: 0.75rem 0.95rem;
+  border: 1px solid rgba(151, 203, 143, 0.42);
+  border-radius: 999px;
+  background: rgba(151, 203, 143, 0.12);
+  color: #f7f5ee;
+  font-size: 0.76rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  text-transform: uppercase;
+  margin-top: clamp(0.3rem, 1vw, 0.75rem);
 `
 
 const Cta = styled.a`
@@ -238,9 +299,6 @@ function PricingSection() {
           <IntroText>
             Honorář má být jasný ještě před první zprávou. Částka je tu pro orientaci, ne jako hlavní pointa.
           </IntroText>
-          <PricingNote>
-            Cestovné se počítá zvlášť podle vzdálenosti od Vyškova. Škola vždy ví výslednou cenu dopředu.
-          </PricingNote>
           <Cta href="#kontakt">Domluvit termín</Cta>
         </Intro>
 
@@ -254,21 +312,36 @@ function PricingSection() {
               whileInView="visible"
               viewport={{ once: true, amount: 0.4 }}
               transition={{ delay: index * 0.08 }}
+              tabIndex={0}
+              aria-label={`${tier.title}, otoč kartu pro cenu ${tier.price}`}
             >
-              <TierMain>
-                <TierCopy>
-                  <TierTitle>
-                    {tier.title}
-                    {'featured' in tier && tier.featured ? <TierBadge>Výhodnější</TierBadge> : null}
-                  </TierTitle>
-                  <TierMeta>{tier.meta}</TierMeta>
-                </TierCopy>
-                <TierPriceBlock>
-                  <TierPrice>{tier.price}</TierPrice>
-                  <TierPriceNote>{tier.priceNote}</TierPriceNote>
-                </TierPriceBlock>
-              </TierMain>
-              <TierFootnote>{tier.footnote}</TierFootnote>
+              <TierInner>
+                <TierFace $featured={'featured' in tier && tier.featured}>
+                  <TierTop>
+                    <TierStripe $featured={'featured' in tier && tier.featured} aria-hidden="true" />
+                    <TierCopy>
+                      <TierTitle>
+                        {tier.title}
+                        {'featured' in tier && tier.featured ? <TierBadge>Výhodnější</TierBadge> : null}
+                      </TierTitle>
+                      <TierMeta>{tier.meta}</TierMeta>
+                    </TierCopy>
+                  </TierTop>
+                  <RevealHint>Hover pro cenu</RevealHint>
+                </TierFace>
+
+                <TierFace $featured={'featured' in tier && tier.featured} $back>
+                  <TierTop>
+                    <TierStripe $featured={'featured' in tier && tier.featured} aria-hidden="true" />
+                    <TierPriceBlock>
+                      <TierPrice>{tier.price}</TierPrice>
+                      <TierPriceNote>{tier.priceNote}</TierPriceNote>
+                    </TierPriceBlock>
+                  </TierTop>
+                  <TierFootnote>{tier.footnote}</TierFootnote>
+                  <BackCta href="#kontakt">Domluvit termín</BackCta>
+                </TierFace>
+              </TierInner>
             </TierCard>
           ))}
         </TierList>

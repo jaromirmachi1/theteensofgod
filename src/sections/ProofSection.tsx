@@ -1,0 +1,569 @@
+import { AnimatePresence, motion } from 'framer-motion'
+import { useCallback, useState } from 'react'
+import styled from 'styled-components'
+import { referenceSlides } from '../data/references'
+import {
+  featuredLecture,
+  getFeaturedLectureThumbnail,
+  getFeaturedLectureWatchUrl,
+} from '../data/featuredLecture'
+import { headingH2, typeBody, typeEyebrow, typeLead, typeQuote } from '../styles/typography'
+
+const Section = styled.section`
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(1.25rem, 3vw, 2rem);
+  min-height: 100svh;
+  height: 100svh;
+  max-height: 100svh;
+  padding: clamp(1.75rem, 4vw, 3.5rem) clamp(1.2rem, 5vw, 4rem);
+  padding-bottom: clamp(5rem, 10vw, 6.5rem);
+  scroll-margin-top: 0;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  border: 0;
+  border-radius: 0;
+  background:
+    radial-gradient(circle at 12% 28%, rgba(151, 203, 143, 0.14), transparent 20rem),
+    radial-gradient(circle at 88% 34%, rgba(244, 181, 255, 0.16), transparent 22rem),
+    linear-gradient(
+      180deg,
+      #070916 0%,
+      rgba(17, 20, 142, 0.82) 18%,
+      #4f53e8 48%,
+      rgba(17, 20, 142, 0.72) 76%,
+      #070916 100%
+    );
+  color: #f7f5ee;
+  box-shadow: none;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(
+        180deg,
+        rgba(5, 7, 13, 0.88) 0%,
+        transparent 18%,
+        transparent 78%,
+        rgba(5, 7, 13, 0.9) 100%
+      ),
+      radial-gradient(circle at 50% 118%, rgba(2, 3, 10, 0.48), transparent 55%);
+    pointer-events: none;
+  }
+`
+
+const Inner = styled.div`
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto minmax(0, auto);
+  gap: clamp(1rem, 2.5vw, 1.75rem);
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+`
+
+const HeroBand = styled.div`
+  display: grid;
+  grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+  gap: clamp(1.25rem, 4vw, 3rem);
+  align-items: center;
+  min-height: 0;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+    align-content: start;
+  }
+`
+
+const Intro = styled(motion.div)`
+  display: grid;
+  gap: clamp(0.65rem, 1.8vw, 1rem);
+  max-width: 34rem;
+  align-self: center;
+`
+
+const Eyebrow = styled.p`
+  ${typeEyebrow};
+  color: #bee3b9;
+`
+
+const Title = styled.h2`
+  ${headingH2};
+  max-width: 11ch;
+`
+
+const Lead = styled.p`
+  ${typeLead};
+  max-width: 42ch;
+  color: rgba(247, 245, 238, 0.9);
+  font-size: clamp(1rem, 1.8vw, 1.3rem);
+`
+
+const Actions = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+`
+
+const ChannelLink = styled.a`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.85rem;
+  padding: 0.8rem 1.05rem;
+  border: 1px solid rgba(151, 203, 143, 0.34);
+  border-radius: 999px;
+  background: rgba(151, 203, 143, 0.1);
+  color: #f7f5ee;
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    background: rgba(151, 203, 143, 0.18);
+  }
+`
+
+const VideoShell = styled(motion.div)`
+  display: grid;
+  align-items: center;
+  min-height: 0;
+  height: 100%;
+`
+
+const PlayOrb = styled.span`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  width: clamp(4rem, 9vw, 5.25rem);
+  height: clamp(4rem, 9vw, 5.25rem);
+  border: 1px solid rgba(247, 245, 238, 0.22);
+  border-radius: 999px;
+  background: linear-gradient(135deg, #97cb8f, #9df5d1);
+  color: #07110b;
+  font-size: clamp(1.05rem, 2.2vw, 1.35rem);
+  font-weight: 900;
+  box-shadow: 0 1.2rem 3rem rgba(151, 203, 143, 0.28);
+  transform: translate(-50%, -50%);
+  transition: transform 0.25s ease;
+`
+
+const VideoFrame = styled.a`
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  max-height: 100%;
+  border: 1px solid rgba(247, 245, 238, 0.16);
+  border-radius: clamp(1.35rem, 3.5vw, 2.25rem);
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 28% 22%, rgba(151, 203, 143, 0.22), transparent 14rem),
+    radial-gradient(circle at 78% 18%, rgba(244, 181, 255, 0.2), transparent 16rem),
+    linear-gradient(145deg, rgba(8, 9, 22, 0.96), rgba(2, 3, 10, 0.92));
+  box-shadow:
+    0 1.5rem 4rem rgba(0, 0, 0, 0.34),
+    inset 0 1px 0 rgba(247, 245, 238, 0.08);
+  text-decoration: none;
+  color: inherit;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0.85rem;
+    border: 1px solid rgba(247, 245, 238, 0.1);
+    border-radius: calc(clamp(1.35rem, 3.5vw, 2.25rem) - 0.55rem);
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  &:hover ${PlayOrb},
+  &:focus-visible ${PlayOrb} {
+    transform: translate(-50%, -50%) scale(1.06);
+  }
+
+  &:focus-visible {
+    outline: 3px solid #92d6c1;
+    outline-offset: 4px;
+  }
+`
+
+const Thumbnail = styled.img`
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+`
+
+const VideoOverlay = styled.div`
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    180deg,
+    rgba(2, 3, 10, 0.06) 18%,
+    rgba(2, 3, 10, 0.38) 58%,
+    rgba(2, 3, 10, 0.9) 100%
+  );
+`
+
+const VideoMeta = styled.div`
+  position: absolute;
+  z-index: 3;
+  left: clamp(0.85rem, 2.5vw, 1.25rem);
+  right: clamp(0.85rem, 2.5vw, 1.25rem);
+  bottom: clamp(0.85rem, 2.5vw, 1.25rem);
+  display: grid;
+  gap: 0.35rem;
+`
+
+const VideoTopic = styled.p`
+  margin: 0;
+  width: fit-content;
+  padding: 0.35rem 0.6rem;
+  border: 1px solid rgba(151, 203, 143, 0.32);
+  border-radius: 999px;
+  background: rgba(151, 203, 143, 0.12);
+  color: #bee3b9;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+`
+
+const VideoTitle = styled.p`
+  margin: 0;
+  font-size: clamp(0.95rem, 1.9vw, 1.25rem);
+  font-weight: 800;
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+`
+
+const VideoAction = styled.p`
+  margin: 0;
+  color: rgba(247, 245, 238, 0.62);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+`
+
+const Divider = styled.div`
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(247, 245, 238, 0.22) 14%,
+    rgba(247, 245, 238, 0.22) 86%,
+    transparent
+  );
+`
+
+const QuotesBlock = styled(motion.div)`
+  display: grid;
+  gap: clamp(0.65rem, 1.5vw, 0.9rem);
+  min-height: 0;
+`
+
+const QuotesToolbar = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+`
+
+const QuotesHeader = styled.div`
+  display: grid;
+  gap: 0.3rem;
+`
+
+const QuotesLabel = styled.p`
+  ${typeEyebrow};
+  color: rgba(247, 245, 238, 0.72);
+`
+
+const QuotesHint = styled.p`
+  ${typeBody};
+  margin: 0;
+  max-width: 42ch;
+  color: rgba(247, 245, 238, 0.62);
+  font-size: clamp(0.92rem, 1.4vw, 1rem);
+`
+
+const CarouselControls = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+`
+
+const CarouselButton = styled.button`
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid rgba(247, 245, 238, 0.18);
+  border-radius: 999px;
+  background: rgba(2, 3, 10, 0.35);
+  color: #f7f5ee;
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease;
+
+  &:hover {
+    transform: translateY(-1px);
+    background: rgba(151, 203, 143, 0.14);
+    border-color: rgba(151, 203, 143, 0.35);
+  }
+
+  &:focus-visible {
+    outline: 3px solid #92d6c1;
+    outline-offset: 2px;
+  }
+`
+
+const DotList = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+`
+
+const DotButton = styled.button<{ $active?: boolean }>`
+  width: ${({ $active }) => ($active ? '1.35rem' : '0.45rem')};
+  height: 0.45rem;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: ${({ $active }) => ($active ? '#97cb8f' : 'rgba(247, 245, 238, 0.28)')};
+  cursor: pointer;
+  transition:
+    width 0.25s ease,
+    background 0.25s ease;
+
+  &:focus-visible {
+    outline: 3px solid #92d6c1;
+    outline-offset: 2px;
+  }
+`
+
+const CarouselViewport = styled.div`
+  position: relative;
+  overflow: hidden;
+  min-height: clamp(7.5rem, 16svh, 10rem);
+`
+
+const QuoteRow = styled(motion.div)`
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 0.85rem;
+
+  @media (max-width: 860px) {
+    grid-template-columns: 1fr;
+  }
+`
+
+const Quote = styled.blockquote`
+  display: grid;
+  align-content: space-between;
+  gap: 0.85rem;
+  min-height: 0;
+  margin: 0;
+  padding: clamp(1rem, 2.2vw, 1.4rem);
+  border: 1px solid rgba(247, 245, 238, 0.14);
+  border-left: 0.45rem solid #97cb8f;
+  border-radius: clamp(1.25rem, 2.8vw, 1.75rem);
+  background:
+    radial-gradient(circle at 10% 6%, rgba(151, 203, 143, 0.1), transparent 12rem),
+    rgba(2, 3, 10, 0.38);
+  box-shadow: 0 0.85rem 2rem rgba(0, 0, 0, 0.16);
+  backdrop-filter: blur(8px);
+`
+
+const QuoteText = styled.p`
+  ${typeQuote};
+  font-size: clamp(0.98rem, 1.9vw, 1.35rem);
+  line-height: 1.1;
+`
+
+const QuoteMeta = styled.footer`
+  color: currentColor;
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  opacity: 0.65;
+  text-transform: uppercase;
+`
+
+const calmEase = [0.22, 1, 0.36, 1] as const
+const slideVariants = {
+  enter: (direction: number) => ({
+    opacity: 0,
+    x: direction > 0 ? 28 : -28,
+  }),
+  center: {
+    opacity: 1,
+    x: 0,
+  },
+  exit: (direction: number) => ({
+    opacity: 0,
+    x: direction > 0 ? -28 : 28,
+  }),
+}
+
+function ProofSection() {
+  const watchUrl = getFeaturedLectureWatchUrl()
+  const thumbnailUrl = getFeaturedLectureThumbnail()
+  const [slideIndex, setSlideIndex] = useState(0)
+  const [direction, setDirection] = useState(0)
+  const totalSlides = referenceSlides.length
+
+  const goToSlide = useCallback(
+    (nextIndex: number) => {
+      const normalized = ((nextIndex % totalSlides) + totalSlides) % totalSlides
+      if (normalized === slideIndex) return
+      setDirection(normalized > slideIndex ? 1 : -1)
+      setSlideIndex(normalized)
+    },
+    [slideIndex, totalSlides],
+  )
+
+  const goPrev = () => goToSlide(slideIndex - 1)
+  const goNext = () => goToSlide(slideIndex + 1)
+
+  const activeSlide = referenceSlides[slideIndex]
+
+  return (
+    <Section id="recenze" aria-labelledby="proof-title">
+      <Inner>
+        <HeroBand>
+          <Intro
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.85, ease: calmEase }}
+          >
+            <Eyebrow>Recenze</Eyebrow>
+            <Title id="proof-title">Důkaz musí znít od dětí i dospělých</Title>
+            <Lead>
+              Nejdřív uvidíš, jak to zní ve třídě — pak reakce, které školy slyší zpět.
+            </Lead>
+            <Actions>
+              <ChannelLink href={featuredLecture.channelUrl} target="_blank" rel="noreferrer">
+                Více na YouTube
+              </ChannelLink>
+            </Actions>
+          </Intro>
+
+          <VideoShell
+            initial={{ opacity: 0, y: 28, scale: 0.98 }}
+            whileInView={{ opacity: 1, y: 0, scale: 1 }}
+            whileHover={{ scale: 1.008, transition: { duration: 0.35, ease: 'easeOut' } }}
+            viewport={{ once: true, amount: 0.25 }}
+            transition={{ duration: 0.9, delay: 0.08, ease: calmEase }}
+          >
+            <VideoFrame
+              href={watchUrl}
+              target="_blank"
+              rel="noreferrer"
+              aria-label={`Přehrát ukázku přednášky: ${featuredLecture.title}. Otevře se na YouTube.`}
+            >
+              {thumbnailUrl ? (
+                <Thumbnail src={thumbnailUrl} alt="" loading="lazy" decoding="async" />
+              ) : null}
+              <VideoOverlay aria-hidden="true" />
+              <PlayOrb aria-hidden="true">▶</PlayOrb>
+              <VideoMeta>
+                <VideoTopic>
+                  {featuredLecture.topic} · {featuredLecture.durationLabel}
+                </VideoTopic>
+                <VideoTitle>{featuredLecture.title}</VideoTitle>
+                <VideoAction>Přehrát na YouTube</VideoAction>
+              </VideoMeta>
+            </VideoFrame>
+          </VideoShell>
+        </HeroBand>
+
+        <Divider aria-hidden="true" />
+
+        <QuotesBlock
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.15 }}
+          transition={{ duration: 0.75, ease: calmEase }}
+        >
+          <QuotesToolbar>
+            <QuotesHeader>
+              <QuotesLabel>Po přednášce</QuotesLabel>
+              <QuotesHint>Čtyři pohledy — listuj dál.</QuotesHint>
+            </QuotesHeader>
+            <CarouselControls aria-label="Listování referencí">
+              <CarouselButton type="button" onClick={goPrev} aria-label="Předchozí reference">
+                ←
+              </CarouselButton>
+              <DotList role="tablist" aria-label="Skupiny referencí">
+                {referenceSlides.map((_, index) => (
+                  <DotButton
+                    key={index}
+                    type="button"
+                    role="tab"
+                    $active={index === slideIndex}
+                    aria-label={`Reference ${index + 1} z ${totalSlides}`}
+                    aria-selected={index === slideIndex}
+                    onClick={() => goToSlide(index)}
+                  />
+                ))}
+              </DotList>
+              <CarouselButton type="button" onClick={goNext} aria-label="Další reference">
+                →
+              </CarouselButton>
+            </CarouselControls>
+          </QuotesToolbar>
+
+          <CarouselViewport aria-live="polite">
+            <AnimatePresence mode="wait" custom={direction}>
+              <QuoteRow
+                key={slideIndex}
+                custom={direction}
+                variants={slideVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{ duration: 0.45, ease: calmEase }}
+              >
+                {activeSlide.map((item) => (
+                  <Quote key={item.meta}>
+                    <QuoteText>{item.text}</QuoteText>
+                    <QuoteMeta>{item.meta}</QuoteMeta>
+                  </Quote>
+                ))}
+              </QuoteRow>
+            </AnimatePresence>
+          </CarouselViewport>
+        </QuotesBlock>
+      </Inner>
+    </Section>
+  )
+}
+
+export default ProofSection
