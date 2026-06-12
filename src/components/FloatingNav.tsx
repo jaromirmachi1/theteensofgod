@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { APP_SCROLL_EVENT } from '../lib/scrollEvents'
 
@@ -31,9 +31,8 @@ const Nav = styled(motion.nav)`
   border-radius: 999px;
   background:
     radial-gradient(circle at 16% 20%, rgba(151, 203, 143, 0.18), transparent 11rem),
-    rgba(5, 7, 13, 0.76);
+    rgba(5, 7, 13, 0.92);
   box-shadow: 0 1.2rem 4rem rgba(0, 0, 0, 0.38);
-  backdrop-filter: blur(24px);
   transform: translateX(-50%);
 
   @media (max-width: 720px) {
@@ -88,7 +87,6 @@ function getActiveSection(): NavSectionId {
 
     const { top, bottom } = section.getBoundingClientRect()
 
-    // Last match wins; top must be near viewport top so a tall next block does not steal focus early.
     if (top <= probeY && bottom >= probeY && top <= SECTION_ARRIVED_PX) {
       match = item.id
     }
@@ -103,24 +101,29 @@ function getActiveSection(): NavSectionId {
 
 function FloatingNav() {
   const [activeSection, setActiveSection] = useState<NavSectionId>('uvod')
+  const activeRef = useRef<NavSectionId>('uvod')
+  const frameRef = useRef(0)
 
   useEffect(() => {
-    let frameId = 0
-
     const updateActiveSection = () => {
-      cancelAnimationFrame(frameId)
-      frameId = requestAnimationFrame(() => {
-        setActiveSection(getActiveSection())
+      if (frameRef.current) return
+
+      frameRef.current = requestAnimationFrame(() => {
+        frameRef.current = 0
+        const next = getActiveSection()
+        if (next === activeRef.current) return
+        activeRef.current = next
+        setActiveSection(next)
       })
     }
 
     updateActiveSection()
-    window.addEventListener(APP_SCROLL_EVENT, updateActiveSection)
+    window.addEventListener(APP_SCROLL_EVENT, updateActiveSection, { passive: true })
     window.addEventListener('resize', updateActiveSection, { passive: true })
     window.addEventListener('hashchange', updateActiveSection)
 
     return () => {
-      cancelAnimationFrame(frameId)
+      if (frameRef.current) cancelAnimationFrame(frameRef.current)
       window.removeEventListener(APP_SCROLL_EVENT, updateActiveSection)
       window.removeEventListener('resize', updateActiveSection)
       window.removeEventListener('hashchange', updateActiveSection)

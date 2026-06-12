@@ -1,6 +1,7 @@
 import { motion, type Variants } from 'framer-motion'
 import styled from 'styled-components'
 import { pricingTiers } from '../data/pricing'
+import { compactLaptop, mobile, tablet } from '../styles/breakpoints'
 import { headingH2, headingH3, typeBody, typeEyebrow } from '../styles/typography'
 
 const Section = styled.section`
@@ -15,8 +16,6 @@ const Section = styled.section`
   padding: clamp(1.75rem, 4vw, 3.5rem) clamp(1.2rem, 5vw, 4rem);
   padding-bottom: clamp(5rem, 10vw, 6.5rem);
   scroll-margin-top: 0;
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
   border: 1px solid rgba(247, 245, 238, 0.12);
   border-radius: clamp(2rem, 6vw, 5rem);
   background:
@@ -26,6 +25,11 @@ const Section = styled.section`
     #070916;
   color: #f7f5ee;
   box-shadow: 0 1rem 4rem rgba(0, 0, 0, 0.2);
+
+  ${compactLaptop} {
+    min-height: auto;
+    justify-content: flex-start;
+  }
 `
 
 const Layout = styled.div`
@@ -38,8 +42,9 @@ const Layout = styled.div`
   width: 100%;
   min-height: 0;
 
-  @media (max-width: 900px) {
+  ${compactLaptop} {
     grid-template-columns: 1fr;
+    gap: clamp(1rem, 2.5vw, 1.5rem);
   }
 `
 
@@ -57,6 +62,11 @@ const Eyebrow = styled.p`
 const Title = styled.h2`
   ${headingH2};
   max-width: 14ch;
+
+  ${compactLaptop} {
+    max-width: 18ch;
+    font-size: clamp(2rem, 5vw, 3.25rem);
+  }
 `
 
 const IntroText = styled.p`
@@ -72,11 +82,11 @@ const TierList = styled.div`
   gap: clamp(1rem, 2.4vw, 1.5rem);
   min-width: 0;
 
-  @media (max-width: 1024px) {
+  ${compactLaptop} {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  @media (max-width: 720px) {
+  ${mobile} {
     grid-template-columns: 1fr;
   }
 `
@@ -85,6 +95,14 @@ const TierCard = styled(motion.article)<{ $featured?: boolean }>`
   position: relative;
   min-height: clamp(21rem, 38svh, 25rem);
   perspective: 1200px;
+
+  ${compactLaptop} {
+    min-height: clamp(18rem, 30svh, 22rem);
+  }
+
+  ${tablet} {
+    min-height: clamp(17rem, 28svh, 20rem);
+  }
 
   &:focus {
     outline: 0;
@@ -123,7 +141,6 @@ const TierFace = styled.div<{ $featured?: boolean; $back?: boolean }>`
   box-shadow: ${({ $featured }) =>
     $featured ? '0 1.5rem 4rem rgba(0, 0, 0, 0.24)' : '0 1rem 3rem rgba(0, 0, 0, 0.18)'};
   overflow: hidden;
-  backdrop-filter: blur(24px);
   backface-visibility: hidden;
   transform: ${({ $back }) => ($back ? 'rotateY(180deg)' : 'rotateY(0)')};
 

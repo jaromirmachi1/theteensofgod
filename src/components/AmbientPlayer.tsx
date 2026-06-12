@@ -26,7 +26,6 @@ const Toggle = styled.button`
   font-weight: 900;
   letter-spacing: 0.04em;
   box-shadow: 0 1rem 2.5rem rgba(0, 0, 0, 0.32);
-  backdrop-filter: blur(20px);
   transition:
     transform 0.2s ease,
     box-shadow 0.2s ease;

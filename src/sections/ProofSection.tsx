@@ -6,6 +6,7 @@ import {
   getFeaturedLectureThumbnail,
   getFeaturedLectureWatchUrl,
 } from '../data/featuredLecture'
+import { compactLaptop, tablet } from '../styles/breakpoints'
 import { headingH2, typeBody, typeEyebrow, typeLead, typeQuote } from '../styles/typography'
 
 const Section = styled.section`
@@ -21,8 +22,6 @@ const Section = styled.section`
   padding: clamp(1.75rem, 4vw, 3.5rem) clamp(1.2rem, 5vw, 4rem);
   padding-bottom: clamp(5rem, 10vw, 6.5rem);
   scroll-margin-top: 0;
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
   border: 0;
   border-radius: 0;
   background:
@@ -39,6 +38,15 @@ const Section = styled.section`
   color: #f7f5ee;
   box-shadow: none;
   overflow: hidden;
+
+  ${compactLaptop} {
+    height: auto;
+    max-height: none;
+    min-height: 100svh;
+    overflow: visible;
+    justify-content: flex-start;
+    padding-top: clamp(1.25rem, 3vw, 2rem);
+  }
 
   &::before {
     content: '';
@@ -66,6 +74,12 @@ const Inner = styled.div`
   width: 100%;
   height: 100%;
   min-height: 0;
+
+  ${compactLaptop} {
+    height: auto;
+    grid-template-rows: auto auto auto;
+    gap: clamp(0.85rem, 2vw, 1.25rem);
+  }
 `
 
 const HeroBand = styled.div`
@@ -75,9 +89,10 @@ const HeroBand = styled.div`
   align-items: center;
   min-height: 0;
 
-  @media (max-width: 900px) {
+  ${compactLaptop} {
     grid-template-columns: 1fr;
     align-content: start;
+    gap: clamp(0.85rem, 2vw, 1.35rem);
   }
 `
 
@@ -96,6 +111,11 @@ const Eyebrow = styled.p`
 const Title = styled.h2`
   ${headingH2};
   max-width: 11ch;
+
+  ${compactLaptop} {
+    max-width: 18ch;
+    font-size: clamp(2rem, 5vw, 3.25rem);
+  }
 `
 
 const Lead = styled.p`
@@ -141,6 +161,13 @@ const VideoShell = styled(motion.div)`
   align-items: center;
   min-height: 0;
   height: 100%;
+
+  ${compactLaptop} {
+    height: auto;
+    width: 100%;
+    max-width: 36rem;
+    justify-self: center;
+  }
 `
 
 const PlayOrb = styled.span`
@@ -200,6 +227,11 @@ const VideoFrame = styled.a`
   &:focus-visible {
     outline: 3px solid #92d6c1;
     outline-offset: 4px;
+  }
+
+  ${compactLaptop} {
+    max-height: clamp(10.5rem, 24vw, 14.5rem);
+    width: 100%;
   }
 `
 
@@ -279,6 +311,11 @@ const QuotesBlock = styled(motion.div)`
   display: grid;
   gap: clamp(0.65rem, 1.5vw, 0.9rem);
   min-height: 0;
+  flex-shrink: 0;
+
+  ${compactLaptop} {
+    padding-top: 0.15rem;
+  }
 `
 
 const QuotesHeader = styled.div`
@@ -312,6 +349,10 @@ const MarqueeViewport = styled.div`
   position: relative;
   overflow: hidden;
   min-height: clamp(7.5rem, 16svh, 10rem);
+
+  ${compactLaptop} {
+    min-height: clamp(6.5rem, 14svh, 8.5rem);
+  }
   mask-image: linear-gradient(
     90deg,
     transparent,
@@ -331,10 +372,14 @@ const MarqueeViewport = styled.div`
 const MarqueeTrack = styled.div`
   display: flex;
   width: max-content;
-  animation: ${marqueeScroll} 52s linear infinite;
+  animation: ${marqueeScroll} 64s linear infinite;
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
 
   @media (prefers-reduced-motion: reduce) {
     animation: none;
+    will-change: auto;
   }
 `
 
@@ -360,13 +405,27 @@ const Quote = styled.blockquote`
     radial-gradient(circle at 10% 6%, rgba(151, 203, 143, 0.1), transparent 12rem),
     rgba(2, 3, 10, 0.38);
   box-shadow: 0 0.85rem 2rem rgba(0, 0, 0, 0.16);
-  backdrop-filter: blur(8px);
+
+  ${compactLaptop} {
+    width: clamp(13.5rem, 42vw, 18rem);
+    min-height: clamp(6rem, 12svh, 8rem);
+    padding: clamp(0.85rem, 2vw, 1.1rem);
+  }
+
+  ${tablet} {
+    width: clamp(12.5rem, 72vw, 16rem);
+  }
 `
 
 const QuoteText = styled.p`
   ${typeQuote};
   font-size: clamp(0.98rem, 1.9vw, 1.35rem);
   line-height: 1.1;
+
+  ${compactLaptop} {
+    font-size: clamp(0.9rem, 1.6vw, 1.1rem);
+    line-height: 1.15;
+  }
 `
 
 const QuoteMeta = styled.footer`

@@ -11,10 +11,10 @@ import {
 import HeroSection from "../sections/HeroSection";
 import ProofSection from "../sections/ProofSection";
 import PricingSection from "../sections/PricingSection";
+import { compactLaptop, tablet } from "../styles/breakpoints";
 
 const Main = styled.main`
   min-height: 100vh;
-  scroll-snap-type: y proximity;
   background:
     radial-gradient(
       circle at 12% 4%,
@@ -82,8 +82,6 @@ const Section = styled(motion.section)<{
       : "clamp(5rem, 10vw, 6.5rem)"};
 
   scroll-margin-top: 0;
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
   border: 1px solid
     ${({ $tone, $blend }) =>
       $blend
@@ -124,6 +122,18 @@ const Section = styled(motion.section)<{
         radial-gradient(circle at 88% 66%, rgba(94, 98, 245, 0.16), transparent 24rem),
         #05070d;
     `}
+
+  ${({ $vh, $fit }) =>
+    ($fit || $vh === 100) &&
+    `
+    ${compactLaptop} {
+      height: auto;
+      max-height: none;
+      min-height: 100svh;
+      overflow: visible;
+      justify-content: flex-start;
+    }
+  `}
 `;
 
 const SectionIntro = styled.div`
@@ -141,6 +151,12 @@ const SectionScroll = styled.div`
   padding-right: 0.15rem;
   scrollbar-width: thin;
   scrollbar-color: rgba(151, 203, 143, 0.35) transparent;
+
+  ${compactLaptop} {
+    overflow: visible;
+    flex: none;
+    min-height: 0;
+  }
 `;
 
 const Split = styled.div`
@@ -149,8 +165,9 @@ const Split = styled.div`
   gap: clamp(1.5rem, 4vw, 3rem);
   align-items: start;
 
-  @media (max-width: 860px) {
+  ${compactLaptop} {
     grid-template-columns: 1fr;
+    gap: clamp(1rem, 2.5vw, 1.5rem);
   }
 `;
 
@@ -159,7 +176,11 @@ const Grid = styled.div`
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: clamp(0.8rem, 2vw, 1.2rem);
 
-  @media (max-width: 900px) {
+  ${compactLaptop} {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  ${tablet} {
     grid-template-columns: 1fr;
   }
 `;
@@ -172,6 +193,11 @@ const Eyebrow = styled.p`
 const SectionTitle = styled.h2`
   ${headingH2};
   max-width: 13ch;
+
+  ${compactLaptop} {
+    max-width: 18ch;
+    font-size: clamp(2rem, 5vw, 3.25rem);
+  }
 `;
 
 const SectionText = styled.p`
@@ -287,8 +313,9 @@ const StatPanel = styled(motion.aside)`
   color: #f7f5ee;
   box-shadow: 0 2rem 5rem rgba(0, 0, 0, 0.24);
 
-  @media (max-width: 860px) {
+  ${compactLaptop} {
     position: static;
+    padding: clamp(1rem, 2.5vw, 1.5rem);
   }
 `;
 
@@ -313,6 +340,10 @@ const ContactLayout = styled.div`
 const ContactSplit = styled(Split)`
   gap: clamp(1rem, 3vw, 2rem);
   align-items: center;
+
+  ${compactLaptop} {
+    align-items: start;
+  }
 `;
 
 const ContactIntro = styled(SectionIntro)`

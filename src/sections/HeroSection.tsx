@@ -1,6 +1,8 @@
 import { ShaderGradient, ShaderGradientCanvas } from '@shadergradient/react'
 import { motion } from 'framer-motion'
+import { useEffect, useState } from 'react'
 import styled from 'styled-components'
+import { compactLaptop, mobile } from '../styles/breakpoints'
 import { headingH1, typeBody, typeEyebrow, typeLead } from '../styles/typography'
 
 const Hero = styled.section`
@@ -17,12 +19,9 @@ const Hero = styled.section`
   background: #02030a;
   color: #f7f5ee;
   box-shadow: 0 2rem 7rem rgba(0, 0, 0, 0.45);
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
-
-  @media (max-width: 860px) {
-    height: 100svh;
-    max-height: 100svh;
+  ${compactLaptop} {
+    height: auto;
+    max-height: none;
     min-height: 100svh;
   }
 `
@@ -70,13 +69,11 @@ const HeroGrid = styled.div`
   align-items: center;
   padding: clamp(1.5rem, 4vw, 2.5rem) clamp(1.15rem, 5vw, 4.5rem) clamp(5.5rem, 9vw, 7rem);
 
-  @media (max-width: 860px) {
+  ${compactLaptop} {
     grid-template-columns: 1fr;
-    flex: 1;
-    min-height: 0;
-    overflow-y: auto;
     align-content: start;
-    padding-top: clamp(0.75rem, 3vw, 1.25rem);
+    padding-top: clamp(0.85rem, 2.5vw, 1.35rem);
+    padding-bottom: clamp(5rem, 8vw, 6.5rem);
   }
 `
 
@@ -94,7 +91,6 @@ const Label = styled.p`
   border-radius: 999px;
   background: rgba(151, 203, 143, 0.1);
   color: #bee3b9;
-  backdrop-filter: blur(18px);
   letter-spacing: 0.12em;
 `
 
@@ -102,6 +98,11 @@ const Title = styled.h1`
   ${headingH1};
   max-width: 10ch;
   text-shadow: 0 1.2rem 5rem rgba(0, 0, 0, 0.42);
+
+  ${compactLaptop} {
+    max-width: 12ch;
+    font-size: clamp(2.5rem, 7vw, 4.5rem);
+  }
 `
 
 const Mission = styled.p`
@@ -130,7 +131,6 @@ const Visual = styled(motion.aside)`
     linear-gradient(145deg, rgba(8, 9, 22, 0.86), rgba(2, 3, 10, 0.78));
   box-shadow: 0 2.5rem 6rem rgba(0, 0, 0, 0.34);
   overflow: hidden;
-  backdrop-filter: blur(24px);
 
   &::before {
     content: '';
@@ -149,10 +149,10 @@ const Visual = styled(motion.aside)`
     filter: blur(4rem);
   }
 
-  @media (max-width: 860px) {
-    height: min(28svh, 16rem);
-    max-height: min(28svh, 16rem);
-    min-height: 12rem;
+  ${compactLaptop} {
+    height: min(24svh, 14rem);
+    max-height: min(24svh, 14rem);
+    min-height: 11rem;
   }
 `
 
@@ -165,9 +165,8 @@ const VisualText = styled.div`
   padding: clamp(1.1rem, 3vw, 1.5rem);
   border-radius: 2rem;
   border: 1px solid rgba(247, 245, 238, 0.14);
-  background: rgba(2, 3, 10, 0.54);
+  background: rgba(2, 3, 10, 0.78);
   color: #f7f5ee;
-  backdrop-filter: blur(24px);
 `
 
 const VisualKicker = styled.p`
@@ -199,18 +198,33 @@ const ScrollCue = styled.a`
   text-decoration: none;
   text-transform: uppercase;
 
-  @media (max-width: 760px) {
+  ${mobile} {
     display: none;
   }
 `
 
 function HeroSection() {
+  const [shaderActive, setShaderActive] = useState(true)
+
+  useEffect(() => {
+    const hero = document.getElementById('uvod')
+    if (!hero) return
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setShaderActive(entry.isIntersecting),
+      { rootMargin: '12% 0px', threshold: 0 },
+    )
+
+    observer.observe(hero)
+    return () => observer.disconnect()
+  }, [])
+
   return (
     <Hero id="uvod" aria-label="Úvod The Teens of God">
       <GradientLayer aria-hidden="true">
         <ShaderGradientCanvas style={{ position: 'absolute', inset: 0 }} pixelDensity={1} fov={45}>
           <ShaderGradient
-            animate="on"
+            animate={shaderActive ? 'on' : 'off'}
             brightness={1.3}
             cAzimuthAngle={180}
             cDistance={3.9}

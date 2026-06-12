@@ -5,28 +5,21 @@ import { APP_SCROLL_EVENT } from '../lib/scrollEvents'
 function SmoothScroll() {
   useEffect(() => {
     const lenis = new Lenis({
-      duration: 1.25,
+      autoRaf: true,
+      duration: 1.05,
       easing: (time) => Math.min(1, 1.001 - 2 ** (-10 * time)),
       smoothWheel: true,
-      wheelMultiplier: 0.78,
+      wheelMultiplier: 0.82,
     })
-
-    let frameId = 0
 
     const notifyScroll = () => {
       window.dispatchEvent(new Event(APP_SCROLL_EVENT))
     }
 
-    function raf(time: number) {
-      lenis.raf(time)
-      notifyScroll()
-      frameId = requestAnimationFrame(raf)
-    }
-
-    frameId = requestAnimationFrame(raf)
+    lenis.on('scroll', notifyScroll)
 
     return () => {
-      cancelAnimationFrame(frameId)
+      lenis.off('scroll', notifyScroll)
       lenis.destroy()
     }
   }, [])
