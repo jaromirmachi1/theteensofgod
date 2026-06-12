@@ -103,7 +103,7 @@ const TierInner = styled.div`
   height: 100%;
   min-height: inherit;
   transform-style: preserve-3d;
-  transition: transform 0.72s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
 `
 
 const TierFace = styled.div<{ $featured?: boolean; $back?: boolean }>`

@@ -6,7 +6,6 @@ import {
   typeBody,
   typeEyebrow,
   typeLead,
-  typeSocial,
   typeStat,
 } from "../styles/typography";
 import HeroSection from "../sections/HeroSection";
@@ -97,14 +96,15 @@ const Section = styled(motion.section)<{
     $blend
       ? "radial-gradient(circle at 12% 18%, rgba(151, 203, 143, 0.14), transparent 22rem), radial-gradient(circle at 88% 72%, rgba(94, 98, 245, 0.16), transparent 24rem), linear-gradient(180deg, #070916 0%, rgba(7, 9, 22, 0.94) 45%, #05070d 100%)"
       : $tone === "navy"
-      ? "radial-gradient(circle at 12% 16%, rgba(151, 203, 143, 0.16), transparent 22rem), #070916"
-      : $tone === "blue"
-        ? "linear-gradient(135deg, #11148e, #5e62f5 50%, #f4b5ff)"
-        : $tone === "cream"
-          ? "linear-gradient(135deg, #f6f0df, #dfffb0)"
-          : "radial-gradient(circle at 82% 4%, rgba(94, 98, 245, 0.22), transparent 26rem), #090b14"};
+        ? "radial-gradient(circle at 12% 16%, rgba(151, 203, 143, 0.16), transparent 22rem), #070916"
+        : $tone === "blue"
+          ? "linear-gradient(135deg, #11148e, #5e62f5 50%, #f4b5ff)"
+          : $tone === "cream"
+            ? "linear-gradient(135deg, #f6f0df, #dfffb0)"
+            : "radial-gradient(circle at 82% 4%, rgba(94, 98, 245, 0.22), transparent 26rem), #090b14"};
   color: ${({ $tone }) => ($tone === "cream" ? "#070916" : "#f7f5ee")};
-  box-shadow: ${({ $blend }) => ($blend ? "none" : "0 1rem 4rem rgba(0, 0, 0, 0.2)")};
+  box-shadow: ${({ $blend }) =>
+    $blend ? "none" : "0 1rem 4rem rgba(0, 0, 0, 0.2)"};
 
   ${({ $blend }) =>
     $blend &&
@@ -130,11 +130,6 @@ const SectionIntro = styled.div`
   display: grid;
   gap: clamp(0.75rem, 2vw, 1rem);
   max-width: 58rem;
-`;
-
-const SectionBody = styled.div`
-  display: grid;
-  gap: clamp(0.85rem, 2vw, 1.25rem);
 `;
 
 const SectionScroll = styled.div`
@@ -169,54 +164,9 @@ const Grid = styled.div`
   }
 `;
 
-const CreamMerged = styled.div`
-  flex: 1;
-  min-height: 0;
-  display: grid;
-  grid-template-rows: auto auto minmax(0, 1fr);
-  gap: clamp(1rem, 2.5vw, 1.75rem);
-  width: 100%;
-`;
-
-const CreamDivider = styled.div`
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(5, 7, 13, 0.14) 12%,
-    rgba(5, 7, 13, 0.14) 88%,
-    transparent
-  );
-`;
-
-const CreamPathsBlock = styled.div`
-  display: grid;
-  grid-template-rows: auto minmax(0, 1fr);
-  gap: clamp(0.85rem, 2vw, 1.25rem);
-  min-height: 0;
-`;
-
-const PathsGrid = styled(Grid)`
-  min-height: 0;
-  align-items: stretch;
-
-  @media (max-width: 900px) {
-    grid-template-columns: repeat(3, minmax(9.5rem, 1fr));
-    overflow-x: auto;
-    overflow-y: hidden;
-    padding-bottom: 0.15rem;
-    scroll-snap-type: x proximity;
-  }
-`;
-
-const PathsTitle = styled.h3`
-  ${headingH3};
-  max-width: 16ch;
-`;
-
-const Eyebrow = styled.p<{ $onCream?: boolean }>`
+const Eyebrow = styled.p`
   ${typeEyebrow};
-  color: ${({ $onCream }) => ($onCream ? "#11148e" : "#97cb8f")};
+  color: #97cb8f;
 `;
 
 const SectionTitle = styled.h2`
@@ -232,62 +182,42 @@ const SectionText = styled.p`
   opacity: 0.7;
 `;
 
-const Lead = styled.p`
-  ${typeLead};
-  max-width: 52rem;
-`;
-
-const cardAccentGlow = ($accent?: "green" | "purple" | "blue", $onCream?: boolean) => {
-  if ($accent === "green") {
-    return $onCream ? "rgba(151, 203, 143, 0.34)" : "rgba(151, 203, 143, 0.18)";
-  }
-  if ($accent === "purple") {
-    return $onCream ? "rgba(244, 181, 255, 0.32)" : "rgba(244, 181, 255, 0.2)";
-  }
-  return $onCream ? "rgba(94, 98, 245, 0.22)" : "rgba(94, 98, 245, 0.22)";
-};
-
-const Card = styled(motion.article)<{
-  $accent?: "green" | "purple" | "blue";
-  $onCream?: boolean;
-}>`
+const Card = styled(motion.article)<{ $accent?: "green" | "purple" | "blue" }>`
   display: grid;
   align-content: start;
   gap: 0.85rem;
   min-height: 0;
   padding: clamp(1.2rem, 2.5vw, 1.8rem);
-  border: 1px solid
-    ${({ $onCream }) =>
-      $onCream ? "rgba(5, 7, 13, 0.1)" : "rgba(247, 245, 238, 0.14)"};
+  border: 1px solid rgba(247, 245, 238, 0.14);
   border-radius: clamp(2rem, 4vw, 3rem);
-  background: ${({ $accent, $onCream }) =>
-    $onCream
-      ? `
-    radial-gradient(circle at 22% 18%, ${cardAccentGlow($accent, true)}, transparent 13rem),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.62), rgba(255, 255, 255, 0.18)),
-    rgba(246, 240, 223, 0.82)
-  `
-      : `
-    radial-gradient(circle at 22% 18%, ${cardAccentGlow($accent)}, transparent 13rem),
-    linear-gradient(180deg, rgba(247, 245, 238, 0.11), rgba(247, 245, 238, 0.03)),
-    rgba(8, 10, 24, 0.72)
-  `};
-  box-shadow: ${({ $onCream }) =>
-    $onCream
-      ? "inset 0 1px 0 rgba(255, 255, 255, 0.55)"
-      : "inset 0 1px 0 rgba(247, 245, 238, 0.08)"};
+  background:
+    radial-gradient(
+      circle at 22% 18%,
+      ${({ $accent }) =>
+        $accent === "green"
+          ? "rgba(151, 203, 143, 0.18)"
+          : $accent === "purple"
+            ? "rgba(244, 181, 255, 0.2)"
+            : "rgba(94, 98, 245, 0.22)"},
+      transparent 13rem
+    ),
+    linear-gradient(
+      180deg,
+      rgba(247, 245, 238, 0.11),
+      rgba(247, 245, 238, 0.03)
+    ),
+    rgba(8, 10, 24, 0.72);
+  box-shadow: inset 0 1px 0 rgba(247, 245, 238, 0.08);
   transition:
     border-color 0.35s ease,
     box-shadow 0.35s ease,
     transform 0.35s ease;
 
   &:hover {
-    border-color: ${({ $onCream }) =>
-      $onCream ? "rgba(5, 7, 13, 0.16)" : "rgba(247, 245, 238, 0.28)"};
-    box-shadow: ${({ $onCream }) =>
-      $onCream
-        ? "inset 0 1px 0 rgba(255, 255, 255, 0.65), 0 1rem 2.5rem rgba(5, 7, 13, 0.08)"
-        : "inset 0 1px 0 rgba(247, 245, 238, 0.1), 0 1.5rem 4rem rgba(0, 0, 0, 0.24)"};
+    border-color: rgba(247, 245, 238, 0.28);
+    box-shadow:
+      inset 0 1px 0 rgba(247, 245, 238, 0.1),
+      0 1.5rem 4rem rgba(0, 0, 0, 0.24);
   }
 
   &::before {
@@ -373,54 +303,6 @@ const StatLabel = styled.p`
   letter-spacing: -0.035em;
 `;
 
-const SocialGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1rem;
-  width: 100%;
-
-  @media (max-width: 760px) {
-    grid-template-columns: 1fr;
-  }
-`;
-
-const SocialLink = styled(motion.a)`
-  display: grid;
-  gap: 0.85rem;
-  min-height: 0;
-  padding: clamp(1.2rem, 2.5vw, 1.6rem);
-  border: 1px solid rgba(247, 245, 238, 0.12);
-  border-radius: clamp(2rem, 4vw, 3rem);
-  color: #f7f5ee;
-  text-decoration: none;
-  background: rgba(8, 10, 24, 0.58);
-  transition:
-    transform 0.2s ease,
-    background 0.2s ease;
-
-  &:hover {
-    transform: translateY(-4px);
-    background: rgba(151, 203, 143, 0.12);
-  }
-`;
-
-const SocialName = styled.span`
-  ${typeSocial};
-`;
-
-const SocialBlock = styled.div`
-  display: grid;
-  gap: clamp(0.85rem, 2vw, 1.25rem);
-  width: 100%;
-`;
-
-const SocialIntro = styled.p`
-  ${typeBody};
-  margin: 0;
-  max-width: 42ch;
-  color: rgba(247, 245, 238, 0.72);
-`;
-
 const ContactLayout = styled.div`
   display: grid;
   gap: clamp(0.85rem, 2vw, 1.25rem);
@@ -447,25 +329,57 @@ const ContactText = styled(SectionText)`
   line-height: 1.55;
 `;
 
-const ContactSocialBlock = styled(SocialBlock)`
-  gap: clamp(0.55rem, 1.4vw, 0.85rem);
+const ContactSocialRow = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.65rem, 2vw, 1rem);
+  width: 100%;
+  padding-top: clamp(0.35rem, 1.2vw, 0.65rem);
+  border-top: 1px solid rgba(247, 245, 238, 0.08);
 `;
 
-const ContactSocialIntro = styled(SocialIntro)`
-  font-size: clamp(0.92rem, 1.4vw, 1rem);
-`;
+const SocialIconLink = styled(motion.a)`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(2.85rem, 7vw, 3.5rem);
+  height: clamp(2.85rem, 7vw, 3.5rem);
+  border: 1px solid rgba(247, 245, 238, 0.14);
+  border-radius: 999px;
+  color: rgba(247, 245, 238, 0.78);
+  text-decoration: none;
+  background:
+    radial-gradient(
+      circle at 30% 20%,
+      rgba(151, 203, 143, 0.1),
+      transparent 70%
+    ),
+    rgba(8, 10, 24, 0.5);
+  box-shadow: inset 0 1px 0 rgba(247, 245, 238, 0.06);
+  transition:
+    color 0.28s ease,
+    border-color 0.28s ease,
+    background 0.28s ease,
+    box-shadow 0.28s ease;
 
-const ContactSocialGrid = styled(SocialGrid)`
-  gap: 0.75rem;
-`;
+  svg {
+    width: 1.2rem;
+    height: 1.2rem;
+    fill: currentColor;
+  }
 
-const ContactSocialLink = styled(SocialLink)`
-  gap: 0.55rem;
-  padding: clamp(0.85rem, 2vw, 1.15rem);
-`;
+  &:hover {
+    color: #07110b;
+    border-color: rgba(151, 203, 143, 0.55);
+    background: linear-gradient(135deg, #97cb8f, #9df5d1);
+    box-shadow: 0 0.75rem 2rem rgba(151, 203, 143, 0.22);
+  }
 
-const ContactSocialName = styled(SocialName)`
-  font-size: clamp(1.35rem, 3vw, 2rem);
+  &:focus-visible {
+    outline: 2px solid #97cb8f;
+    outline-offset: 3px;
+  }
 `;
 
 const Form = styled(motion.form)`
@@ -571,18 +485,30 @@ const lectureThemes = [
 const socials = [
   {
     name: "TikTok",
-    text: "Krátké formáty pro teenagery, které mluví jejich jazykem.",
     href: "https://www.tiktok.com/@theteensofgod",
+    icon: (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z" />
+      </svg>
+    ),
   },
   {
     name: "Instagram",
-    text: "Zákulisí, myšlenky, pozvánky a vizuální svět projektu.",
     href: "https://www.instagram.com/theteensofgod",
+    icon: (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M7.8 2h8.4A5.8 5.8 0 0 1 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8A5.8 5.8 0 0 1 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2zm0 1.9A3.9 3.9 0 0 0 3.9 7.8v8.4A3.9 3.9 0 0 0 7.8 20h8.4a3.9 3.9 0 0 0 3.9-3.8V7.8A3.9 3.9 0 0 0 16.2 3.9H7.8zM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 1.9a3.1 3.1 0 1 0 0 6.2 3.1 3.1 0 0 0 0-6.2zm5.8-2.3a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4z" />
+      </svg>
+    ),
   },
   {
     name: "YouTube",
-    text: "Delší obsah, rozhovory a budoucí video formáty.",
     href: "https://www.youtube.com/@theteensofgod",
+    icon: (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31.6 31.6 0 0 0 0 12a31.6 31.6 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31.6 31.6 0 0 0 24 12a31.6 31.6 0 0 0-.5-5.8zM9.7 15.5V8.5L15.8 12l-6.1 3.5z" />
+      </svg>
+    ),
   },
 ] as const;
 
@@ -616,94 +542,6 @@ function HomePage() {
     <Main>
       <HeroSection />
       <Sections>
-        <Section
-          id="o-projektu"
-          $tone="cream"
-          $vh={100}
-          $fit
-          aria-labelledby="project-title"
-          variants={sectionReveal}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.22 }}
-        >
-          <CreamMerged>
-            <Split>
-              <SectionIntro>
-                <Eyebrow $onCream>O projektu</Eyebrow>
-                <SectionTitle id="project-title">
-                  Starší sourozenec pro nový svět
-                </SectionTitle>
-              </SectionIntro>
-              <SectionBody>
-                <Lead>
-                  The Teens of God propojuje dva světy: teenagery, kteří chtějí
-                  mluvit otevřeně a bez přetvářky, a školy, které hledají
-                  srozumitelný způsob, jak k mladým opravdu promluvit.
-                </Lead>
-                <SectionText>
-                  Kristýna Sekaninová, zakladatelka projektu, je ročník 1999.
-                  Jako zástupkyně starší Gen Z se vrací do škol a otevírá
-                  témata, která v běžné výuce často chybí: AI, digitální návyky,
-                  vztahy, emoční inteligenci a práci s tlakem.
-                </SectionText>
-              </SectionBody>
-            </Split>
-
-            <CreamDivider aria-hidden="true" />
-
-            <CreamPathsBlock id="temata" aria-labelledby="paths-title">
-              <SectionIntro>
-                <Eyebrow $onCream>Dvě cesty</Eyebrow>
-                <PathsTitle id="paths-title">
-                  Digitální svět. Lidskost.
-                </PathsTitle>
-              </SectionIntro>
-              <PathsGrid>
-                <Card
-                  $accent="blue"
-                  $onCream
-                  variants={calmCard}
-                  whileHover={{ y: -8 }}
-                  transition={{ duration: 0.35 }}
-                >
-                  <CardTitle>Svět tam venku</CardTitle>
-                  <SmallText>
-                    AI, algoritmy a digitální návyky, které formují pozornost,
-                    rozhodování i každodenní psychickou pohodu.
-                  </SmallText>
-                </Card>
-                <Card
-                  $accent="green"
-                  $onCream
-                  variants={calmCard}
-                  whileHover={{ y: -8 }}
-                  transition={{ duration: 0.35 }}
-                >
-                  <CardTitle>Ty sám</CardTitle>
-                  <SmallText>
-                    Emoce, hranice, sebevědomí a tlak okolí bez infantilního
-                    tónu. Obsah, který respektuje realitu mladých lidí.
-                  </SmallText>
-                </Card>
-                <Card
-                  $accent="purple"
-                  $onCream
-                  variants={calmCard}
-                  whileHover={{ y: -8 }}
-                  transition={{ duration: 0.35 }}
-                >
-                  <CardTitle>Ty s druhými</CardTitle>
-                  <SmallText>
-                    Vztahy, komunikace a řeč těla v konkrétních situacích z
-                    reálného života. Prakticky, srozumitelně a bez pouček.
-                  </SmallText>
-                </Card>
-              </PathsGrid>
-            </CreamPathsBlock>
-          </CreamMerged>
-        </Section>
-
         <Section
           id="prednasky"
           $tone="navy"
@@ -784,7 +622,11 @@ function HomePage() {
                   organizace mohla rychle ozvat a domluvit další kroky.
                 </ContactText>
               </ContactIntro>
-              <ContactForm name="lecture-inquiry" method="post" variants={calmCard}>
+              <ContactForm
+                name="lecture-inquiry"
+                method="post"
+                variants={calmCard}
+              >
                 <ContactField>
                   Jméno
                   <ContactInput name="name" autoComplete="name" required />
@@ -814,29 +656,26 @@ function HomePage() {
                   Zpráva
                   <ContactTextArea name="message" rows={2} required />
                 </ContactField>
-                <ContactSubmit type="submit">Chci Kristýnu na přednášku</ContactSubmit>
+                <ContactSubmit type="submit">
+                  Chci Kristýnu na přednášku
+                </ContactSubmit>
               </ContactForm>
             </ContactSplit>
-            <ContactSocialBlock aria-label="Sociální sítě">
-              <ContactSocialIntro>
-                Najdi mě tam, kde už jsi — TikTok, Instagram a YouTube.
-              </ContactSocialIntro>
-              <ContactSocialGrid>
-                {socials.map((social) => (
-                  <ContactSocialLink
-                    key={social.name}
-                    href={social.href}
-                    target="_blank"
-                    rel="noreferrer"
-                    whileHover={{ y: -8 }}
-                  >
-                    <ContactSocialName>{social.name}</ContactSocialName>
-                    <SmallText>{social.text}</SmallText>
-                    <SmallText>@theTeensOfGod</SmallText>
-                  </ContactSocialLink>
-                ))}
-              </ContactSocialGrid>
-            </ContactSocialBlock>
+            <ContactSocialRow aria-label="Sociální sítě">
+              {socials.map((social) => (
+                <SocialIconLink
+                  key={social.name}
+                  href={social.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={`${social.name} — @theteensofgod`}
+                  whileHover={{ y: -4 }}
+                  whileTap={{ scale: 0.94 }}
+                >
+                  {social.icon}
+                </SocialIconLink>
+              ))}
+            </ContactSocialRow>
           </ContactLayout>
         </Section>
       </Sections>

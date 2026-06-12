@@ -5,7 +5,7 @@ import { APP_SCROLL_EVENT } from '../lib/scrollEvents'
 
 const navItems = [
   { label: 'Úvod', href: '#uvod', id: 'uvod' },
-  { label: 'Témata', href: '#temata', id: 'temata' },
+  { label: 'Přednášky', href: '#prednasky', id: 'prednasky' },
   { label: 'Recenze', href: '#recenze', id: 'recenze' },
   { label: 'Ceník', href: '#cenik', id: 'cenik' },
   { label: 'Kontakt', href: '#kontakt', id: 'kontakt' },

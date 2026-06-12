@@ -1,7 +1,6 @@
-import { AnimatePresence, motion } from 'framer-motion'
-import { useCallback, useState } from 'react'
-import styled from 'styled-components'
-import { referenceSlides } from '../data/references'
+import { motion } from 'framer-motion'
+import styled, { keyframes } from 'styled-components'
+import { referenceQuotes } from '../data/references'
 import {
   featuredLecture,
   getFeaturedLectureThumbnail,
@@ -282,13 +281,6 @@ const QuotesBlock = styled(motion.div)`
   min-height: 0;
 `
 
-const QuotesToolbar = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-`
-
 const QuotesHeader = styled.div`
   display: grid;
   gap: 0.3rem;
@@ -307,87 +299,58 @@ const QuotesHint = styled.p`
   font-size: clamp(0.92rem, 1.4vw, 1rem);
 `
 
-const CarouselControls = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  flex-shrink: 0;
-`
-
-const CarouselButton = styled.button`
-  display: grid;
-  place-items: center;
-  width: 2.5rem;
-  height: 2.5rem;
-  border: 1px solid rgba(247, 245, 238, 0.18);
-  border-radius: 999px;
-  background: rgba(2, 3, 10, 0.35);
-  color: #f7f5ee;
-  cursor: pointer;
-  font-size: 1rem;
-  line-height: 1;
-  transition:
-    transform 0.2s ease,
-    background 0.2s ease,
-    border-color 0.2s ease;
-
-  &:hover {
-    transform: translateY(-1px);
-    background: rgba(151, 203, 143, 0.14);
-    border-color: rgba(151, 203, 143, 0.35);
+const marqueeScroll = keyframes`
+  from {
+    transform: translateX(0);
   }
-
-  &:focus-visible {
-    outline: 3px solid #92d6c1;
-    outline-offset: 2px;
+  to {
+    transform: translateX(-50%);
   }
 `
 
-const DotList = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-`
-
-const DotButton = styled.button<{ $active?: boolean }>`
-  width: ${({ $active }) => ($active ? '1.35rem' : '0.45rem')};
-  height: 0.45rem;
-  padding: 0;
-  border: 0;
-  border-radius: 999px;
-  background: ${({ $active }) => ($active ? '#97cb8f' : 'rgba(247, 245, 238, 0.28)')};
-  cursor: pointer;
-  transition:
-    width 0.25s ease,
-    background 0.25s ease;
-
-  &:focus-visible {
-    outline: 3px solid #92d6c1;
-    outline-offset: 2px;
-  }
-`
-
-const CarouselViewport = styled.div`
+const MarqueeViewport = styled.div`
   position: relative;
   overflow: hidden;
   min-height: clamp(7.5rem, 16svh, 10rem);
+  mask-image: linear-gradient(
+    90deg,
+    transparent,
+    #000 6%,
+    #000 94%,
+    transparent
+  );
+
+  @media (prefers-reduced-motion: reduce) {
+    overflow-x: auto;
+    mask-image: none;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(151, 203, 143, 0.35) transparent;
+  }
 `
 
-const QuoteRow = styled(motion.div)`
-  display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
-  gap: 0.85rem;
+const MarqueeTrack = styled.div`
+  display: flex;
+  width: max-content;
+  animation: ${marqueeScroll} 52s linear infinite;
 
-  @media (max-width: 860px) {
-    grid-template-columns: 1fr;
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
   }
+`
+
+const MarqueeGroup = styled.div`
+  display: flex;
+  gap: clamp(0.75rem, 2vw, 1rem);
+  padding-right: clamp(0.75rem, 2vw, 1rem);
 `
 
 const Quote = styled.blockquote`
   display: grid;
   align-content: space-between;
   gap: 0.85rem;
-  min-height: 0;
+  flex: 0 0 auto;
+  width: clamp(15rem, 26vw, 21rem);
+  min-height: clamp(7rem, 14svh, 9.5rem);
   margin: 0;
   padding: clamp(1rem, 2.2vw, 1.4rem);
   border: 1px solid rgba(247, 245, 238, 0.14);
@@ -416,43 +379,10 @@ const QuoteMeta = styled.footer`
 `
 
 const calmEase = [0.22, 1, 0.36, 1] as const
-const slideVariants = {
-  enter: (direction: number) => ({
-    opacity: 0,
-    x: direction > 0 ? 28 : -28,
-  }),
-  center: {
-    opacity: 1,
-    x: 0,
-  },
-  exit: (direction: number) => ({
-    opacity: 0,
-    x: direction > 0 ? -28 : 28,
-  }),
-}
 
 function ProofSection() {
   const watchUrl = getFeaturedLectureWatchUrl()
   const thumbnailUrl = getFeaturedLectureThumbnail()
-  const [slideIndex, setSlideIndex] = useState(0)
-  const [direction, setDirection] = useState(0)
-  const totalSlides = referenceSlides.length
-
-  const goToSlide = useCallback(
-    (nextIndex: number) => {
-      const normalized = ((nextIndex % totalSlides) + totalSlides) % totalSlides
-      if (normalized === slideIndex) return
-      setDirection(normalized > slideIndex ? 1 : -1)
-      setSlideIndex(normalized)
-    },
-    [slideIndex, totalSlides],
-  )
-
-  const goPrev = () => goToSlide(slideIndex - 1)
-  const goNext = () => goToSlide(slideIndex + 1)
-
-  const activeSlide = referenceSlides[slideIndex]
-
   return (
     <Section id="recenze" aria-labelledby="proof-title">
       <Inner>
@@ -512,54 +442,31 @@ function ProofSection() {
           viewport={{ once: true, amount: 0.15 }}
           transition={{ duration: 0.75, ease: calmEase }}
         >
-          <QuotesToolbar>
-            <QuotesHeader>
-              <QuotesLabel>Po přednášce</QuotesLabel>
-              <QuotesHint>Čtyři pohledy — listuj dál.</QuotesHint>
-            </QuotesHeader>
-            <CarouselControls aria-label="Listování referencí">
-              <CarouselButton type="button" onClick={goPrev} aria-label="Předchozí reference">
-                ←
-              </CarouselButton>
-              <DotList role="tablist" aria-label="Skupiny referencí">
-                {referenceSlides.map((_, index) => (
-                  <DotButton
-                    key={index}
-                    type="button"
-                    role="tab"
-                    $active={index === slideIndex}
-                    aria-label={`Reference ${index + 1} z ${totalSlides}`}
-                    aria-selected={index === slideIndex}
-                    onClick={() => goToSlide(index)}
-                  />
-                ))}
-              </DotList>
-              <CarouselButton type="button" onClick={goNext} aria-label="Další reference">
-                →
-              </CarouselButton>
-            </CarouselControls>
-          </QuotesToolbar>
+          <QuotesHeader>
+            <QuotesLabel>Po přednášce</QuotesLabel>
+            <QuotesHint>Reakce z tříd, škol a domovů.</QuotesHint>
+          </QuotesHeader>
 
-          <CarouselViewport aria-live="polite">
-            <AnimatePresence mode="wait" custom={direction}>
-              <QuoteRow
-                key={slideIndex}
-                custom={direction}
-                variants={slideVariants}
-                initial="enter"
-                animate="center"
-                exit="exit"
-                transition={{ duration: 0.45, ease: calmEase }}
-              >
-                {activeSlide.map((item) => (
-                  <Quote key={item.meta}>
+          <MarqueeViewport aria-label="Reference po přednáškách">
+            <MarqueeTrack>
+              <MarqueeGroup>
+                {referenceQuotes.map((item, index) => (
+                  <Quote key={`${item.meta}-${index}`}>
                     <QuoteText>{item.text}</QuoteText>
                     <QuoteMeta>{item.meta}</QuoteMeta>
                   </Quote>
                 ))}
-              </QuoteRow>
-            </AnimatePresence>
-          </CarouselViewport>
+              </MarqueeGroup>
+              <MarqueeGroup aria-hidden="true">
+                {referenceQuotes.map((item, index) => (
+                  <Quote key={`${item.meta}-dup-${index}`}>
+                    <QuoteText>{item.text}</QuoteText>
+                    <QuoteMeta>{item.meta}</QuoteMeta>
+                  </Quote>
+                ))}
+              </MarqueeGroup>
+            </MarqueeTrack>
+          </MarqueeViewport>
         </QuotesBlock>
       </Inner>
     </Section>

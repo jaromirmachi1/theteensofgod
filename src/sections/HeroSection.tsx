@@ -282,7 +282,7 @@ function HeroSection() {
         </Visual>
       </HeroGrid>
 
-      <ScrollCue href="#o-projektu">Scrolluj dál</ScrollCue>
+      <ScrollCue href="#prednasky">Scrolluj dál</ScrollCue>
     </Hero>
   )
 }
