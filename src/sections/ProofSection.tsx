@@ -6,7 +6,7 @@ import {
   getFeaturedLectureThumbnail,
   getFeaturedLectureWatchUrl,
 } from '../data/featuredLecture'
-import { compactLaptop, tablet } from '../styles/breakpoints'
+import { shortViewport, tablet } from '../styles/breakpoints'
 import { headingH2, typeBody, typeEyebrow, typeLead, typeQuote } from '../styles/typography'
 
 const Section = styled.section`
@@ -39,7 +39,7 @@ const Section = styled.section`
   box-shadow: none;
   overflow: hidden;
 
-  ${compactLaptop} {
+  ${shortViewport} {
     height: auto;
     max-height: none;
     min-height: 100svh;
@@ -75,7 +75,7 @@ const Inner = styled.div`
   height: 100%;
   min-height: 0;
 
-  ${compactLaptop} {
+  ${shortViewport} {
     height: auto;
     grid-template-rows: auto auto auto;
     gap: clamp(0.85rem, 2vw, 1.25rem);
@@ -89,7 +89,7 @@ const HeroBand = styled.div`
   align-items: center;
   min-height: 0;
 
-  ${compactLaptop} {
+  ${tablet} {
     grid-template-columns: 1fr;
     align-content: start;
     gap: clamp(0.85rem, 2vw, 1.35rem);
@@ -112,7 +112,7 @@ const Title = styled.h2`
   ${headingH2};
   max-width: 11ch;
 
-  ${compactLaptop} {
+  ${tablet} {
     max-width: 18ch;
     font-size: clamp(2rem, 5vw, 3.25rem);
   }
@@ -162,11 +162,16 @@ const VideoShell = styled(motion.div)`
   min-height: 0;
   height: 100%;
 
-  ${compactLaptop} {
+  ${shortViewport} {
     height: auto;
     width: 100%;
     max-width: 36rem;
-    justify-self: center;
+    justify-self: end;
+  }
+
+  ${tablet} {
+    max-width: none;
+    justify-self: stretch;
   }
 `
 
@@ -229,7 +234,7 @@ const VideoFrame = styled.a`
     outline-offset: 4px;
   }
 
-  ${compactLaptop} {
+  ${shortViewport} {
     max-height: clamp(10.5rem, 24vw, 14.5rem);
     width: 100%;
   }
@@ -313,7 +318,7 @@ const QuotesBlock = styled(motion.div)`
   min-height: 0;
   flex-shrink: 0;
 
-  ${compactLaptop} {
+  ${shortViewport} {
     padding-top: 0.15rem;
   }
 `
@@ -350,7 +355,7 @@ const MarqueeViewport = styled.div`
   overflow: hidden;
   min-height: clamp(7.5rem, 16svh, 10rem);
 
-  ${compactLaptop} {
+  ${shortViewport} {
     min-height: clamp(6.5rem, 14svh, 8.5rem);
   }
   mask-image: linear-gradient(
@@ -406,7 +411,7 @@ const Quote = styled.blockquote`
     rgba(2, 3, 10, 0.38);
   box-shadow: 0 0.85rem 2rem rgba(0, 0, 0, 0.16);
 
-  ${compactLaptop} {
+  ${shortViewport} {
     width: clamp(13.5rem, 42vw, 18rem);
     min-height: clamp(6rem, 12svh, 8rem);
     padding: clamp(0.85rem, 2vw, 1.1rem);
@@ -422,7 +427,7 @@ const QuoteText = styled.p`
   font-size: clamp(0.98rem, 1.9vw, 1.35rem);
   line-height: 1.1;
 
-  ${compactLaptop} {
+  ${tablet} {
     font-size: clamp(0.9rem, 1.6vw, 1.1rem);
     line-height: 1.15;
   }

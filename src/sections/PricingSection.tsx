@@ -1,7 +1,7 @@
 import { motion, type Variants } from 'framer-motion'
 import styled from 'styled-components'
 import { pricingTiers } from '../data/pricing'
-import { compactLaptop, mobile, tablet } from '../styles/breakpoints'
+import { mobile, shortViewport, tablet } from '../styles/breakpoints'
 import { headingH2, headingH3, typeBody, typeEyebrow } from '../styles/typography'
 
 const Section = styled.section`
@@ -26,7 +26,7 @@ const Section = styled.section`
   color: #f7f5ee;
   box-shadow: 0 1rem 4rem rgba(0, 0, 0, 0.2);
 
-  ${compactLaptop} {
+  ${shortViewport} {
     min-height: auto;
     justify-content: flex-start;
   }
@@ -42,7 +42,7 @@ const Layout = styled.div`
   width: 100%;
   min-height: 0;
 
-  ${compactLaptop} {
+  ${tablet} {
     grid-template-columns: 1fr;
     gap: clamp(1rem, 2.5vw, 1.5rem);
   }
@@ -63,7 +63,7 @@ const Title = styled.h2`
   ${headingH2};
   max-width: 14ch;
 
-  ${compactLaptop} {
+  ${tablet} {
     max-width: 18ch;
     font-size: clamp(2rem, 5vw, 3.25rem);
   }
@@ -82,7 +82,7 @@ const TierList = styled.div`
   gap: clamp(1rem, 2.4vw, 1.5rem);
   min-width: 0;
 
-  ${compactLaptop} {
+  ${tablet} {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -96,7 +96,7 @@ const TierCard = styled(motion.article)<{ $featured?: boolean }>`
   min-height: clamp(21rem, 38svh, 25rem);
   perspective: 1200px;
 
-  ${compactLaptop} {
+  ${shortViewport} {
     min-height: clamp(18rem, 30svh, 22rem);
   }
 

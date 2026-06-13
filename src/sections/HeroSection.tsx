@@ -2,7 +2,7 @@ import { ShaderGradient, ShaderGradientCanvas } from '@shadergradient/react'
 import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { compactLaptop, mobile } from '../styles/breakpoints'
+import { mobile, shortViewport, tablet } from '../styles/breakpoints'
 import { headingH1, typeBody, typeEyebrow, typeLead } from '../styles/typography'
 
 const Hero = styled.section`
@@ -19,7 +19,7 @@ const Hero = styled.section`
   background: #02030a;
   color: #f7f5ee;
   box-shadow: 0 2rem 7rem rgba(0, 0, 0, 0.45);
-  ${compactLaptop} {
+  ${shortViewport} {
     height: auto;
     max-height: none;
     min-height: 100svh;
@@ -69,7 +69,7 @@ const HeroGrid = styled.div`
   align-items: center;
   padding: clamp(1.5rem, 4vw, 2.5rem) clamp(1.15rem, 5vw, 4.5rem) clamp(5.5rem, 9vw, 7rem);
 
-  ${compactLaptop} {
+  ${tablet} {
     grid-template-columns: 1fr;
     align-content: start;
     padding-top: clamp(0.85rem, 2.5vw, 1.35rem);
@@ -99,7 +99,7 @@ const Title = styled.h1`
   max-width: 10ch;
   text-shadow: 0 1.2rem 5rem rgba(0, 0, 0, 0.42);
 
-  ${compactLaptop} {
+  ${tablet} {
     max-width: 12ch;
     font-size: clamp(2.5rem, 7vw, 4.5rem);
   }
@@ -149,7 +149,7 @@ const Visual = styled(motion.aside)`
     filter: blur(4rem);
   }
 
-  ${compactLaptop} {
+  ${tablet} {
     height: min(24svh, 14rem);
     max-height: min(24svh, 14rem);
     min-height: 11rem;

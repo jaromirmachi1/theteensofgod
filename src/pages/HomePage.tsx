@@ -11,7 +11,7 @@ import {
 import HeroSection from "../sections/HeroSection";
 import ProofSection from "../sections/ProofSection";
 import PricingSection from "../sections/PricingSection";
-import { compactLaptop, tablet } from "../styles/breakpoints";
+import { shortViewport, tablet } from "../styles/breakpoints";
 
 const Main = styled.main`
   min-height: 100vh;
@@ -126,7 +126,7 @@ const Section = styled(motion.section)<{
   ${({ $vh, $fit }) =>
     ($fit || $vh === 100) &&
     `
-    ${compactLaptop} {
+    ${shortViewport} {
       height: auto;
       max-height: none;
       min-height: 100svh;
@@ -152,7 +152,7 @@ const SectionScroll = styled.div`
   scrollbar-width: thin;
   scrollbar-color: rgba(151, 203, 143, 0.35) transparent;
 
-  ${compactLaptop} {
+  ${shortViewport} {
     overflow: visible;
     flex: none;
     min-height: 0;
@@ -165,7 +165,7 @@ const Split = styled.div`
   gap: clamp(1.5rem, 4vw, 3rem);
   align-items: start;
 
-  ${compactLaptop} {
+  ${tablet} {
     grid-template-columns: 1fr;
     gap: clamp(1rem, 2.5vw, 1.5rem);
   }
@@ -175,10 +175,6 @@ const Grid = styled.div`
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: clamp(0.8rem, 2vw, 1.2rem);
-
-  ${compactLaptop} {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
 
   ${tablet} {
     grid-template-columns: 1fr;
@@ -194,7 +190,7 @@ const SectionTitle = styled.h2`
   ${headingH2};
   max-width: 13ch;
 
-  ${compactLaptop} {
+  ${tablet} {
     max-width: 18ch;
     font-size: clamp(2rem, 5vw, 3.25rem);
   }
@@ -313,7 +309,7 @@ const StatPanel = styled(motion.aside)`
   color: #f7f5ee;
   box-shadow: 0 2rem 5rem rgba(0, 0, 0, 0.24);
 
-  ${compactLaptop} {
+  ${tablet} {
     position: static;
     padding: clamp(1rem, 2.5vw, 1.5rem);
   }
@@ -341,7 +337,7 @@ const ContactSplit = styled(Split)`
   gap: clamp(1rem, 3vw, 2rem);
   align-items: center;
 
-  ${compactLaptop} {
+  ${tablet} {
     align-items: start;
   }
 `;
